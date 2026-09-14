@@ -11,7 +11,7 @@ struct FlightSearchRequest: Codable, Hashable, Sendable {
     let destinationCity: String     // "New York"  – display only, not sent
     let outboundDate: Date          // calendar day; time part ignored
     let adults: Int                 // 2 (D-05)
-    let currencyCode: String        // "BDT"
+    let currencyCode: String        // "BDT" — the app's business/display currency; the wire request to SerpApi always uses USD (D-06)
     let tripType: TripType          // .oneWay
 }
 enum TripType: String, Codable, Sendable { case oneWay = "One Way" }
@@ -28,7 +28,7 @@ enum TripType: String, Codable, Sendable { case oneWay = "One Way" }
 | `outbound_date` | `2026-10-14` | `outboundDate`, formatted `yyyy-MM-dd`, `en_US_POSIX`, **UTC** calendar |
 | `type` | `2` | `tripType == .oneWay` |
 | `adults` | `2` | `adults` |
-| `currency` | `BDT` | `currencyCode` |
+| `currency` | `USD` | fixed wire currency (`SerpApiRequestBuilder.wireCurrencyCode`), **not** `request.currencyCode` — SerpApi rejects `BDT` (D-06) |
 | `hl` | `en` | constant |
 | `gl` | `bd` | constant |
 | `api_key` | *secret* | `AppConfig` — **appended last, excluded from cache key and logs** |
@@ -208,7 +208,10 @@ The id must stay the same across requests and re-sorts, and must be unique withi
 
 Every drop is counted, and DEBUG logs `Skipped N of M flight groups (reasons: …)`.
 
-### 4.8 Response → service result (`SerpApiFlightSearchService`)
+### 4.8 Currency conversion (D-06)
+The API is always called with `currency=USD` (§1.2). After `FlightOfferMapper.map` runs (still in raw USD), `SerpApiFlightSearchService` converts every offer's `price` from USD to `request.currencyCode` ("BDT") with a fixed rate (`fixedUSDToBDTRate = 122.0`), rounding to the nearest whole unit, and keeps `currencyCode` as the mapper already set it. The mapper itself never does this — it stays pure and currency-agnostic, which is also why its own unit tests use plain pass-through prices.
+
+### 4.8b Response → service result (`SerpApiFlightSearchService`)
 
 | HTTP | Body | Result |
 |---|---|---|

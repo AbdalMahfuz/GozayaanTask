@@ -25,7 +25,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 ## B. Data: request & mapping
 | ID | Criterion | Verify |
 |---|---|---|
-| B1 | Request URL contains `engine=google_flights`, `departure_id=DAC`, `arrival_id=JFK`, `outbound_date=YYYY-MM-DD`, `type=2`, `adults=2`, `currency=BDT`, `hl=en`, `gl=bd`, `api_key=…` | UT `SerpApiRequestBuilderTests.test_buildsExpectedQueryItems` |
+| B1 | Request URL contains `engine=google_flights`, `departure_id=DAC`, `arrival_id=JFK`, `outbound_date=YYYY-MM-DD`, `type=2`, `adults=2`, `currency=USD` (fixed wire currency — SerpApi rejects BDT, D-06), `hl=en`, `gl=bd`, `api_key=…` | UT `SerpApiRequestBuilderTests.test_buildsExpectedQueryItems` |
 | B2 | `outbound_date` is the same calendar day whatever the device time zone (test with `Pacific/Kiritimati` and `Pacific/Pago_Pago`) | UT `test_outboundDate_isTimeZoneIndependent` |
 | B3 | Non-stop fixture → 1 offer: `DAC 12:30 → BKK 16:50`, `stops 0`, `duration 280`, `price 37400`, `dayOffset 0` | UT `FlightOfferMapperTests.test_nonStop` |
 | B4 | 2-leg overnight → `stops 1`, `dayOffset +1`, departure from leg 1, arrival from leg 2, layover code taken | UT `test_oneStop_overnight` |
@@ -52,6 +52,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | C8 | Missing/empty API key → `.missingAPIKey` and **no** HTTP call made | UT `RemoteFlightsDataSourceTests.test_missingKey_doesNotHitNetwork` |
 | C9 | Cache: second identical request within TTL doesn't call inner source; after TTL it does; non-2xx not cached; cache key excludes `api_key` | UT `CachedFlightsDataSourceTests` (4 tests) |
 | C10 | `api_key` value never appears in log output (`redact` replaces it) | UT `LogTests.test_redactsApiKey` |
+| C11 | Wire request always sends `currency=USD`; a `BDT` business request gets its offers' prices converted (`price × 122`) with `currencyCode == "BDT"` on the result (D-06) | UT `SerpApiRequestBuilderTests.test_buildsExpectedQueryItems`, `SerpApiFlightSearchServiceTests.test_success_convertsPriceToBusinessCurrency` |
 
 ## D. ViewModel: state
 | ID | Criterion | Verify |
