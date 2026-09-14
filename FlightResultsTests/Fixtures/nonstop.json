@@ -1,0 +1,23 @@
+{
+  "search_metadata": { "status": "Success" },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 12:30" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 16:50" },
+          "duration": 280,
+          "airline": "Biman Bangladesh Airlines",
+          "airline_logo": "https://example.com/logos/biman.png",
+          "flight_number": "BG 147",
+          "overnight": false
+        }
+      ],
+      "total_duration": 280,
+      "price": 37400,
+      "type": "One way",
+      "airline_logo": "https://example.com/logos/biman.png"
+    }
+  ],
+  "other_flights": []
+}

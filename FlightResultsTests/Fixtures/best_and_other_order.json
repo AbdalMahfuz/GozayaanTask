@@ -1,0 +1,63 @@
+{
+  "search_metadata": { "status": "Success" },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 06:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 10:20" },
+          "duration": 260,
+          "airline": "Biman Bangladesh Airlines",
+          "flight_number": "BG 101"
+        }
+      ],
+      "total_duration": 260,
+      "price": 30000,
+      "type": "One way"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 08:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 12:00" },
+          "duration": 240,
+          "airline": "US Bangla Airlines",
+          "flight_number": "BS 102"
+        }
+      ],
+      "total_duration": 240,
+      "price": 31000,
+      "type": "One way"
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 10:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 14:10" },
+          "duration": 250,
+          "airline": "Emirates",
+          "flight_number": "EK 103"
+        }
+      ],
+      "total_duration": 250,
+      "price": 32000,
+      "type": "One way"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 12:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 16:15" },
+          "duration": 255,
+          "airline": "Qatar Airways",
+          "flight_number": "QR 104"
+        }
+      ],
+      "total_duration": 255,
+      "price": 33000,
+      "type": "One way"
+    }
+  ]
+}

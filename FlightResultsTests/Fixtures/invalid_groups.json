@@ -1,0 +1,53 @@
+{
+  "search_metadata": { "status": "Success" },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 12:30" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 16:50" },
+          "duration": 280,
+          "airline": "Biman Bangladesh Airlines",
+          "flight_number": "BG 147"
+        }
+      ],
+      "total_duration": 280,
+      "type": "One way"
+    },
+    {
+      "flights": [],
+      "total_duration": 100,
+      "price": 40000,
+      "type": "One way"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "15/02/2026 12:30" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 16:50" },
+          "duration": 280,
+          "airline": "Biman Bangladesh Airlines",
+          "flight_number": "BG 148"
+        }
+      ],
+      "total_duration": 280,
+      "price": 39000,
+      "type": "One way"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 06:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 10:20" },
+          "duration": 260,
+          "airline": "US Bangla Airlines",
+          "flight_number": "BS 009"
+        }
+      ],
+      "total_duration": 260,
+      "price": 35000,
+      "type": "One way"
+    }
+  ],
+  "other_flights": []
+}

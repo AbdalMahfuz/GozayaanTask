@@ -1,0 +1,34 @@
+{
+  "search_metadata": { "status": "Success" },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 06:00" },
+          "arrival_airport": { "name": "Indira Gandhi International Airport", "id": "DEL", "time": "2026-02-15 08:40" },
+          "duration": 100,
+          "airline": "US Bangla Airlines",
+          "airline_logo": "https://example.com/logos/us-bangla.png",
+          "flight_number": "BS 011",
+          "overnight": false
+        },
+        {
+          "departure_airport": { "name": "Indira Gandhi International Airport", "id": "DEL", "time": "2026-02-15 10:00" },
+          "arrival_airport": { "name": "Suvarnabhumi Airport", "id": "BKK", "time": "2026-02-15 14:00" },
+          "duration": 120,
+          "airline": "US Bangla Airlines",
+          "airline_logo": "https://example.com/logos/us-bangla.png",
+          "flight_number": "BS 012",
+          "overnight": false
+        }
+      ],
+      "layovers": [
+        { "duration": 60, "name": "Indira Gandhi International Airport", "id": "DEL", "overnight": false }
+      ],
+      "price": 50000,
+      "type": "One way",
+      "airline_logo": "https://example.com/logos/us-bangla.png"
+    }
+  ],
+  "other_flights": []
+}

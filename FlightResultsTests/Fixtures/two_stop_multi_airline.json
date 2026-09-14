@@ -1,0 +1,45 @@
+{
+  "search_metadata": { "status": "Success" },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Hazrat Shahjalal International Airport", "id": "DAC", "time": "2026-02-15 09:30" },
+          "arrival_airport": { "name": "Sharjah International Airport", "id": "SHJ", "time": "2026-02-15 13:10" },
+          "duration": 340,
+          "airline": "Air Arabia",
+          "airline_logo": "https://example.com/logos/air-arabia.png",
+          "flight_number": "G9 501",
+          "overnight": false
+        },
+        {
+          "departure_airport": { "name": "Sharjah International Airport", "id": "SHJ", "time": "2026-02-15 16:10" },
+          "arrival_airport": { "name": "Bandaranaike International Airport", "id": "CMB", "time": "2026-02-15 21:40" },
+          "duration": 270,
+          "airline": "US Bangla Airlines",
+          "airline_logo": "https://example.com/logos/us-bangla.png",
+          "flight_number": "BS 021",
+          "overnight": false
+        },
+        {
+          "departure_airport": { "name": "Bandaranaike International Airport", "id": "CMB", "time": "2026-02-16 23:50" },
+          "arrival_airport": { "name": "John F. Kennedy International Airport", "id": "JFK", "time": "2026-02-17 07:40" },
+          "duration": 950,
+          "airline": "US Bangla Airlines",
+          "airline_logo": "https://example.com/logos/us-bangla.png",
+          "flight_number": "BS 147",
+          "overnight": true
+        }
+      ],
+      "layovers": [
+        { "duration": 180, "name": "Sharjah International Airport", "id": "SHJ", "overnight": false },
+        { "duration": 1450, "name": "Bandaranaike International Airport", "id": "CMB", "overnight": true }
+      ],
+      "total_duration": 2890,
+      "price": 145600,
+      "type": "One way",
+      "airline_logo": "https://example.com/logos/multi.png"
+    }
+  ],
+  "other_flights": []
+}
