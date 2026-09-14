@@ -1,8 +1,9 @@
 import UIKit
 
 /// Pinned header (route header, date strip, sort/filter bar) + a scrolling
-/// results area below. The results area's real layout/cells are built in
-/// plan steps 10–14; for now it's an empty collection view (spec 05 §2).
+/// results area below. Skeletons, promo carousel and empty/error views are
+/// built in plan steps 11–13; for now only the success-state flight cards
+/// render (plan step 10, spec 05 §2–§3.1).
 final class FlightResultsViewController: UIViewController {
     private let viewModel: FlightResultsViewModel
     private let imageLoader: ImageLoading
@@ -11,11 +12,37 @@ final class FlightResultsViewController: UIViewController {
     private let dateFareStripView = DateFareStripView()
     private let sortFilterBarView = SortFilterBarView()
 
+    // Items carry ids only; content is looked up here, rebuilt on every
+    // render (spec 04 §3.5).
+    private var cardsByID: [String: FlightCardViewData] = [:]
+
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+        let layout = FlightResultsLayout.make { [weak self] index in
+            self?.dataSource.snapshot().sectionIdentifiers[safe: index]
+        }
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .clear
+        view.delegate = self
         return view
+    }()
+
+    private lazy var cardCellRegistration = UICollectionView.CellRegistration<FlightCardCell, String> {
+        [weak self] cell, _, id in
+        guard let card = self?.cardsByID[id] else { return }
+        cell.configure(with: card, imageLoader: self?.imageLoader)
+    }
+
+    private lazy var dataSource: UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem> = {
+        UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
+            guard let self else { return UICollectionViewCell() }
+            switch item {
+            case .flight(let id):
+                return collectionView.dequeueConfiguredReusableCell(using: self.cardCellRegistration, for: indexPath, item: id)
+            case .loadingBanner, .skeleton, .promotion:
+                // Built in plan steps 11–12.
+                return UICollectionViewCell()
+            }
+        }
     }()
 
     init(viewModel: FlightResultsViewModel, imageLoader: ImageLoading) {
@@ -38,6 +65,7 @@ final class FlightResultsViewController: UIViewController {
         sortFilterBarView.onSortTapped = { [weak self] in
             self?.toggleSort()
         }
+        _ = dataSource // force the lazy data source to attach before the first snapshot
 
         viewModel.onStateChange = { [weak self] state in
             self?.render(state)
@@ -95,7 +123,17 @@ final class FlightResultsViewController: UIViewController {
             isEnabled: sortEnabled
         )
 
-        // Cards, promotions, empty/error views: plan steps 10–14.
+        var snapshot = NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>()
+        if case .success(let cards) = state {
+            cardsByID = Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0) })
+            snapshot.appendSections([.listTop])
+            snapshot.appendItems(cards.map { .flight(id: $0.id) }, toSection: .listTop)
+        } else {
+            cardsByID = [:]
+        }
+        dataSource.apply(snapshot, animatingDifferences: true)
+
+        // Skeletons, promo carousel, empty/error views: plan steps 11–13.
     }
 
     // Temporary stand-in until plan step 14 adds `SortDropdownView`: cycles
@@ -106,5 +144,19 @@ final class FlightResultsViewController: UIViewController {
         let next: SortOption = viewModel.sortOption == .cheapest ? .fastest : .cheapest
         viewModel.selectSort(next)
         sortFilterBarView.configure(sortTitle: next == .cheapest ? "Cheapest" : "Fastest", isEnabled: true)
+    }
+}
+
+extension FlightResultsViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        guard case .flight(let id) = dataSource.itemIdentifier(for: indexPath) else { return }
+        viewModel.didSelectFlight(id: id)
+    }
+}
+
+private extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
