@@ -1,0 +1,754 @@
+{
+  "search_metadata": {
+    "id": "6aa82d4e86e9fa7d4d27a3a9",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/nDjprCauw9LoHe2Srdmy_KklTG94RqLCHPbYvzIAmEM/6aa82d4e86e9fa7d4d27a3a9.json",
+    "markdown_endpoint": "https://serpapi.com/searches/nDjprCauw9LoHe2Srdmy_KklTG94RqLCHPbYvzIAmEM/6aa82d4e86e9fa7d4d27a3a9.md",
+    "created_at": "2026-09-14 17:22:22 UTC",
+    "processed_at": "2026-09-14 17:22:22 UTC",
+    "google_flights_url": "https://www.google.com/travel/flights?hl=en&gl=bd&curr=USD&tfs=CBwQAhoeEgoyMDI2LTEwLTE0agcIARIDREFDcgcIARIDSkZLQAFAAUgBcAGYAQI&tfu=EgIIAQ",
+    "raw_html_file": "https://serpapi.com/searches/nDjprCauw9LoHe2Srdmy_KklTG94RqLCHPbYvzIAmEM/6aa82d4e86e9fa7d4d27a3a9.html",
+    "prettify_html_file": "https://serpapi.com/searches/nDjprCauw9LoHe2Srdmy_KklTG94RqLCHPbYvzIAmEM/6aa82d4e86e9fa7d4d27a3a9.prettify",
+    "total_time_taken": 3.37
+  },
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "gl": "bd",
+    "type": "2",
+    "departure_id": "DAC",
+    "arrival_id": "JFK",
+    "outbound_date": "2026-10-14",
+    "adults": 2,
+    "currency": "USD"
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 02:15"
+          },
+          "arrival_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-14 04:55"
+          },
+          "duration": 340,
+          "airplane": "Boeing 777",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 639",
+          "ticket_also_sold_by": [
+            "American"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 646 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-14 07:55"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 15:10"
+          },
+          "duration": 855,
+          "airplane": "Boeing 777",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 701",
+          "ticket_also_sold_by": [
+            "American",
+            "JetBlue"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1572 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 180,
+          "name": "Hamad International Airport",
+          "id": "DOH"
+        }
+      ],
+      "total_duration": 1375,
+      "carbon_emissions": {
+        "this_flight": 2219000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 9
+      },
+      "price": 1148,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RSVWpZek9YeFJVamN3TVJvTENNaUFCeEFDR2dOVlUwUTRISERJZ0FjPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRPSCIsbnVsbCwiUVIiLCI2MzkiXSxbIkRPSCIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIlFSIiwiNzAxIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 11:10"
+          },
+          "arrival_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-14 13:50"
+          },
+          "duration": 340,
+          "airplane": "Boeing 777",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 641",
+          "ticket_also_sold_by": [
+            "American"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 646 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-14 15:35"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 22:30"
+          },
+          "duration": 835,
+          "airplane": "Airbus A350",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 705",
+          "ticket_also_sold_by": [
+            "American",
+            "JetBlue"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1414 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 105,
+          "name": "Hamad International Airport",
+          "id": "DOH"
+        }
+      ],
+      "total_duration": 1280,
+      "carbon_emissions": {
+        "this_flight": 2061000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 1
+      },
+      "price": 1148,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RSVWpZME1YeFJVamN3TlJvTENNaUFCeEFDR2dOVlUwUTRISERJZ0FjPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRPSCIsbnVsbCwiUVIiLCI2NDEiXSxbIkRPSCIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIlFSIiwiNzA1Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 19:05"
+          },
+          "arrival_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-14 21:45"
+          },
+          "duration": 340,
+          "airplane": "Boeing 777",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 643",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 646 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Hamad International Airport",
+            "id": "DOH",
+            "time": "2026-10-15 02:05"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-15 09:00"
+          },
+          "duration": 835,
+          "airplane": "Boeing 777",
+          "airline": "Qatar Airways",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+          "travel_class": "Economy",
+          "flight_number": "QR 703",
+          "ticket_also_sold_by": [
+            "American"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1572 kg"
+          ],
+          "overnight": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 260,
+          "name": "Hamad International Airport",
+          "id": "DOH"
+        }
+      ],
+      "total_duration": 1435,
+      "carbon_emissions": {
+        "this_flight": 2219000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 9
+      },
+      "price": 1148,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/QR.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RSVWpZME0zeFJVamN3TXhvTENNaUFCeEFDR2dOVlUwUTRISERJZ0FjPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRPSCIsbnVsbCwiUVIiLCI2NDMiXSxbIkRPSCIsIjIwMjYtMTAtMTUiLCJKRksiLG51bGwsIlFSIiwiNzAzIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 02:10"
+          },
+          "arrival_airport": {
+            "name": "Hong Kong International Airport",
+            "id": "HKG",
+            "time": "2026-10-14 08:10"
+          },
+          "duration": 240,
+          "airplane": "Airbus A330",
+          "airline": "Cathay Pacific",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CX.png",
+          "travel_class": "Economy",
+          "flight_number": "CX 662",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 361 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Hong Kong International Airport",
+            "id": "HKG",
+            "time": "2026-10-14 09:05"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 13:10"
+          },
+          "duration": 965,
+          "airplane": "Boeing 777",
+          "airline": "Cathay Pacific",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CX.png",
+          "travel_class": "Economy",
+          "flight_number": "CX 830",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1970 kg"
+          ],
+          "overnight": true,
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 55,
+          "name": "Hong Kong International Airport",
+          "id": "HKG"
+        }
+      ],
+      "total_duration": 1260,
+      "carbon_emissions": {
+        "this_flight": 2332000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 15
+      },
+      "price": 1332,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CX.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3REV0RZMk1ueERXRGd6TUJvTENLeVFDQkFDR2dOVlUwUTRISENza0FnPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkhLRyIsbnVsbCwiQ1giLCI2NjIiXSxbIkhLRyIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIkNYIiwiODMwIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 01:40"
+          },
+          "arrival_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-14 04:30"
+          },
+          "duration": 290,
+          "airplane": "Boeing 777",
+          "airline": "Emirates",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+          "travel_class": "Economy",
+          "flight_number": "EK 585",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 550 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-14 08:25"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 14:40"
+          },
+          "duration": 855,
+          "airplane": "Airbus A380",
+          "airline": "Emirates",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+          "travel_class": "Economy",
+          "flight_number": "EK 201",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1910 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 235,
+          "name": "Dubai International Airport",
+          "id": "DXB"
+        }
+      ],
+      "total_duration": 1380,
+      "carbon_emissions": {
+        "this_flight": 2461000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 21
+      },
+      "price": 1464,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RGU3pVNE5YeEZTekl3TVJvTENQMzJDQkFDR2dOVlUwUTRISEQ5OWdnPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRYQiIsbnVsbCwiRUsiLCI1ODUiXSxbIkRYQiIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIkVLIiwiMjAxIl1dXQ=="
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 19:30"
+          },
+          "arrival_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-14 22:30"
+          },
+          "duration": 300,
+          "airplane": "Boeing 777",
+          "airline": "Emirates",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+          "travel_class": "Economy",
+          "flight_number": "EK 587",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 535 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-15 02:35"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-15 08:50"
+          },
+          "duration": 855,
+          "airplane": "Airbus A380",
+          "airline": "Emirates",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+          "travel_class": "Economy",
+          "flight_number": "EK 203",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1872 kg"
+          ],
+          "overnight": true,
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 245,
+          "name": "Dubai International Airport",
+          "id": "DXB"
+        }
+      ],
+      "total_duration": 1400,
+      "carbon_emissions": {
+        "this_flight": 2408000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 18
+      },
+      "price": 1464,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RGU3pVNE4zeEZTekl3TXhvTENQMzJDQkFDR2dOVlUwUTRISEQ5OWdnPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRYQiIsbnVsbCwiRUsiLCI1ODciXSxbIkRYQiIsIjIwMjYtMTAtMTUiLCJKRksiLG51bGwsIkVLIiwiMjAzIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 22:00"
+          },
+          "arrival_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-15 01:05"
+          },
+          "duration": 305,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "flydubai",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/FZ.png",
+          "travel_class": "Economy",
+          "flight_number": "FZ 524",
+          "ticket_also_sold_by": [
+            "Emirates"
+          ],
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 479 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Dubai International Airport",
+            "id": "DXB",
+            "time": "2026-10-15 08:25"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-15 14:40"
+          },
+          "duration": 855,
+          "airplane": "Airbus A380",
+          "airline": "Emirates",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/EK.png",
+          "travel_class": "Economy",
+          "flight_number": "EK 201",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1910 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 440,
+          "name": "Dubai International Airport",
+          "id": "DXB"
+        }
+      ],
+      "total_duration": 1600,
+      "carbon_emissions": {
+        "this_flight": 2390000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 17
+      },
+      "price": 1745,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3RHV2pVeU5IeEZTekl3TVJvTENJVFRDaEFDR2dOVlUwUTRISENFMHdvPSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkRYQiIsbnVsbCwiRloiLCI1MjQiXSxbIkRYQiIsIjIwMjYtMTAtMTUiLCJKRksiLG51bGwsIkVLIiwiMjAxIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 08:10"
+          },
+          "arrival_airport": {
+            "name": "Istanbul Airport",
+            "id": "IST",
+            "time": "2026-10-14 13:55"
+          },
+          "duration": 525,
+          "airplane": "Airbus A330",
+          "airline": "Turkish Airlines",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TK.png",
+          "travel_class": "Economy",
+          "flight_number": "TK 743",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 776 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Istanbul Airport",
+            "id": "IST",
+            "time": "2026-10-14 18:40"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 22:30"
+          },
+          "duration": 650,
+          "airplane": "Boeing 777",
+          "airline": "Turkish Airlines",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TK.png",
+          "travel_class": "Economy",
+          "flight_number": "TK 11",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 915 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 285,
+          "name": "Istanbul Airport",
+          "id": "IST"
+        }
+      ],
+      "total_duration": 1460,
+      "carbon_emissions": {
+        "this_flight": 1692000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": -17
+      },
+      "price": 1902,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TK.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3BVU3pjME0zeFVTekV4R2dzSThNMExFQUlhQTFWVFJEZ2NjUEROQ3c9PSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIklTVCIsbnVsbCwiVEsiLCI3NDMiXSxbIklTVCIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIlRLIiwiMTEiXV1d"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-14 02:35"
+          },
+          "arrival_airport": {
+            "name": "King Abdulaziz International Airport",
+            "id": "JED",
+            "time": "2026-10-14 06:15"
+          },
+          "duration": 400,
+          "airplane": "Boeing 777",
+          "airline": "Saudia",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/SV.png",
+          "travel_class": "Business Class",
+          "flight_number": "SV 803",
+          "extensions": [
+            "Angled flat seat",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 2763 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "King Abdulaziz International Airport",
+            "id": "JED",
+            "time": "2026-10-14 08:50"
+          },
+          "arrival_airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK",
+            "time": "2026-10-14 14:45"
+          },
+          "duration": 775,
+          "airplane": "Boeing 777",
+          "airline": "Saudia",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/SV.png",
+          "travel_class": "Economy",
+          "flight_number": "SV 21",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 1276 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 155,
+          "name": "King Abdulaziz International Airport",
+          "id": "JED"
+        }
+      ],
+      "total_duration": 1330,
+      "carbon_emissions": {
+        "this_flight": 4040000,
+        "typical_for_this_route": 2036000,
+        "difference_percent": 98
+      },
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/SV.png",
+      "booking_token": "WyJDalJJYkdWUlIxQktNMTlDY0hkQldGUnRWMEZDUnkwdExTMHRMUzB0TFMxMmQybHZOMEZCUVVGQlIzRnZURlpKUVdGbWFtOUJFZ3BUVmpnd00zeFRWakl4T0J3PSIsW1siREFDIiwiMjAyNi0xMC0xNCIsIkpFRCIsbnVsbCwiU1YiLCI4MDMiXSxbIkpFRCIsIjIwMjYtMTAtMTQiLCJKRksiLG51bGwsIlNWIiwiMjEiXV1d"
+    }
+  ],
+  "price_insights": {
+    "lowest_price": 1148,
+    "price_level": "typical",
+    "typical_price_range": [
+      1000,
+      1400
+    ]
+  },
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "id": "DAC",
+            "name": "Hazrat Shahjalal International Airport"
+          },
+          "city": "Dhaka",
+          "country": "Bangladesh",
+          "country_code": "BD",
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNzsQoXEbAaQQmyeJYcjd7hcBPlqkA2k_ZemUV-nrPK9OSNkD9xSsmW2h7a61lfAHA0OV_F-TbeGfdkQ",
+          "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCf_Tg_Q3LODtV1aR31aBUkR5BPBE0UHmnuMa9pdzoFBtVyT8x5lnK6pqtBYFbRU35-NHmUqzuX1qjuFdHAVDiwaZXildvE-2dS4ifrzo"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "id": "JFK",
+            "name": "John F. Kennedy International Airport"
+          },
+          "city": "New York",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRa1dwH1NZQk4dsbPiyA9Vrq2RX75jXSZ-OkHn7NkLHl-11HercqDXoZ4p2cDxJkH6vca2degawrCzHEQ",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQEaUa9NsdPWGpAUGkTApkZDT_4M6_6V8wTcC0v1b1wJAJX-BuMSiipXbsoznGgcI1xLOc5QiTcR_xovexgjdOz0gqQe0tRQ9h0bUkZ07Q"
+        }
+      ]
+    }
+  ]
+}

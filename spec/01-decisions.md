@@ -31,14 +31,18 @@ Shimmer, image loading and JSON decoding are small enough to write ourselves. Th
 - "Today" comes from an injected `DateProvider`, so tests are deterministic.
 - In **fixture mode** the request date is the fixture's own date, so the header stays consistent with the data shown.
 
-### D-05 — Passengers: **2 adults**, shown as `02`; price treated as the **total** for all passengers ✔ Reviewed ↻ May change
+### D-05 — Passengers: **2 adults**, shown as `02`; price treated as the **total** for all passengers ✔ Verified (2026-09-14)
 - Matches the design (`👤 02`).
 - SerpApi's `price` is treated as the **total fare for all passengers** and shown as-is under "Starting from". It is **not** divided per person.
-- Risk accepted: if SerpApi turns out to return a per-person fare, the displayed number would be half the real total. Check this against Google Flights once the real fixture is captured (Step 2) and note the result in NOTES.md.
+- **Verified against the real API** (Step 2): the same DAC→JFK/2026-10-14 search with `adults=1` returned `price_insights.lowest_price: 574`; with `adults=2` it returned `1148` — exactly double. `price` scales linearly with `adults`, confirming it's the total, not per-person. No code change needed; the risk noted in the original draft didn't materialize.
 - `adults` is a single value in `FlightSearchRequest` (built in `AppEnvironment`), so changing it later is a one-line change; the header, request and tests all read from it.
 
-### D-06 — Fixed query: `type=2` (one-way), `currency=BDT`, `hl=en`, `gl=bd`, `adults=2`
-`gl=bd` asks for Bangladesh-market results and pricing, which matches GoZayaan's market and the BDT currency.
+### D-06 — Fixed query: `type=2` (one-way), wire `currency=USD`, `hl=en`, `gl=bd`, `adults=2`; displayed in BDT via a fixed rate ↻ Refined after Step 2
+- `gl=bd` asks for Bangladesh-market results, which matches GoZayaan's market.
+- **SerpApi/Google Flights doesn't accept `currency=BDT` for this route.** Verified two ways during Step 2: a live request with `currency=BDT` returned HTTP 400 `"Unsupported `BDT` for currency."`, and SerpApi's own [Google Travel currency list](https://serpapi.com/google-travel-currencies) doesn't include BDT.
+- **Resolution:** the two currencies are decoupled. `SerpApiRequestBuilder.wireCurrencyCode` is a fixed constant, always `"USD"`, used for the actual HTTP request — independent of `FlightSearchRequest.currencyCode`, which stays the app's **business/display currency**, `"BDT"` (matching the design and GoZayaan's market, D-15). `SerpApiFlightSearchService` converts each mapped offer's price from the USD the API returns to BDT with a fixed, hand-set rate (`fixedUSDToBDTRate = 122.0`) before returning it.
+- **Known limitation** (stated on the call, in README): this is a fixed snapshot rate, not a live FX feed, so displayed BDT prices will drift from real-time conversion over time. Acceptable for a take-home; a production build would either get BDT pricing from a GoZayaan backend or call a live FX rate service.
+- `FlightOfferMapper` stays pure and currency-agnostic (mapper tests still use plain pass-through prices); the conversion is isolated to the service layer, the one place that actually talks to SerpApi.
 
 ---
 

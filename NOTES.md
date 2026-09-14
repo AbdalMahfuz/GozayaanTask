@@ -23,9 +23,11 @@ What the AI produced, what was wrong with it, and what I changed.
 | 7 | Spec | Planned `static` shared date/number formatters | Rejected by Swift 6 strict concurrency (non-`Sendable` static) | One formatter per instance (A11) | AI, when I asked it to check the spec for gaps |
 | 8 | Spec | Unit tests hosted in the app with no guard | Every test run would launch a live SerpApi search | Unit-test guard in `SceneDelegate` (A10) | AI, when I asked it to check the spec for gaps |
 | 9 | Spec | Minimum iOS 16 | No iOS 16 simulator on this Mac, so it could never be tested | iOS 18 (D-01) | AI, when I asked it to check the spec for gaps |
+| 10 | Code (Step 2) | Spec planned `currency=BDT`. First fix: the AI proposed switching the **whole app** to USD (request, display, dummy fares) | A live request with `currency=BDT` returned HTTP 400 `"Unsupported \`BDT\` for currency."`, confirmed by SerpApi's own currency list — but I want the design's BDT labelling kept, since that's GoZayaan's market | Kept `BDT` as the app's business/display currency; only the wire request to SerpApi is hardcoded to `USD` (`SerpApiRequestBuilder.wireCurrencyCode`); `SerpApiFlightSearchService` converts the returned price with a fixed rate (`× 122`) before it reaches the ViewModel (D-06) | me — I rejected the AI's first "just use USD everywhere" fix and asked for BDT with a conversion instead |
+| 11 | Code (Step 2) | D-05 flagged price-per-person as an open risk | Same search with `adults=1` vs `adults=2` returned `price_insights.lowest_price` 574 vs 1148 — exactly double | Confirms `price` is already the correct total; no code change (D-05 marked ✔ Verified) | AI, running the real Step 2 captures |
 
 ## Thrown away
-- *(nothing yet)*
+- An early `serpapi_dac_jfk_oneway.json` fixture, hand-written from the SerpApi docs (before the real key arrived) to unblock Step 3–6 work while waiting for the key (the user said not to let the key block progress). Replaced wholesale by the real captured response once the key was available, per D-32/D-11's own reasoning about not trusting docs-from-memory shapes.
 
 ## Decisions that were mine
 - Reviewed and confirmed or changed: D-01, D-03, D-05, D-18, D-19, D-27, D-30, D-32 (see `spec/01-decisions.md`).
