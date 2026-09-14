@@ -2,7 +2,7 @@
 
 Each criterion can be checked with a single pass/fail. **Verify** column:
 - **UT**: automated unit test, named in the cell
-- **MT**: manual test on the simulator (iPhone 17e / iOS 26.5, plus one run on iPhone 12 / iOS 18.0)
+- **MT**: manual test on the simulator (iPhone 17e / iOS 26.5, plus one run on iPhone 12 / iOS 18.0, the minimum version)
 - **CR**: code review or grep check
 
 The work is **done** when every row passes, the project builds with **0 warnings**, and all unit tests are green.
@@ -19,6 +19,8 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | A7 | No retain cycle: closing/replacing the screen deallocates VC and VM | UT `test_viewModel_isReleased_whenNoExternalReferences` (weak-ref check) + MT Memory Graph shows no cycle |
 | A8 | Launch arguments and `#if DEBUG` data-source switching appear only in `AppEnvironment` | CR: grep `FRDataSource\|FRForceState` |
 | A9 | Builds under Swift 6 language mode with 0 warnings | CR: `xcodebuild … build` output |
+| A10 | Running the unit tests never starts the app's coordinators or a network request (unit-test guard, `04 §4`) | CR + MT: breakpoint/log in `AppCoordinator.start` is not hit during `xcodebuild test` |
+| A11 | No `static` / global `DateFormatter` or `NumberFormatter`, and no `nonisolated(unsafe)` anywhere | CR: grep |
 
 ## B. Data: request & mapping
 | ID | Criterion | Verify |
@@ -89,7 +91,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | F4 | Stops: `0→"Non-Stop"`, `1→"1 Stop"`, `2→"2 Stop"`, `3→"3 Stop"`; dots capped at 3 | UT `test_stops` |
 | F5 | Dates: header `"15 Feb, 2026"`, chip `"Sun 15 Feb"`, passengers `2→"02"`, `1→"01"` | UT `test_dates_and_passengers` |
 
-## G. UI: manual checks against `/design`
+## G. UI: manual checks against `../design`
 | ID | Criterion | Verify |
 |---|---|---|
 | G1 | **Loading** looks like `…One Way-1.png`: progress bar, "Hang tight!" text, 3 shimmering skeletons, carousel after skeleton 2, strip fares as shimmer bars, chart border grey | MT (scheme *Loading*), screenshot in `docs/screenshots/loading.png` |
@@ -100,7 +102,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | G6 | Date strip scrolls horizontally; selected chip (search date) is visible & yellow on launch; tapping chips changes nothing | MT |
 | G7 | Header, strip and sort bar stay pinned while the list scrolls | MT |
 | G8 | Carousel scrolls sideways with centred paging, cards peek on both sides | MT |
-| G9a | Promo image is our own `promo_discount` artwork; nothing from `/design` is in the repo (`git ls-files` shows no PNG copied from the design) | CR |
+| G9a | Promo image is our own `promo_discount` artwork; nothing from the design is in the repo (`git ls-files` shows no PNG copied from the design) | CR |
 | G9 | Tapping a promo card (or Learn more) opens gozayaan.com in Safari View Controller; Done returns to the list at the same scroll position | MT |
 | G10 | Sort dropdown matches `Cheapest (Sorting Drop Down).png`; choosing Fastest reorders cards with move animation, no scroll jump; button title becomes "Fastest"; outside tap dismisses | MT, screenshot `sort.png` |
 | G11 | Long airline name (`Air Arabia + US Bangla Airlines`) truncates with `…` and doesn't push "Get Points" | MT (fixture has one) |

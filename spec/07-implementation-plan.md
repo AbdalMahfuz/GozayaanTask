@@ -11,22 +11,37 @@
 ---
 
 ## Step 0 — Repo & spec
-- `.gitignore` (Xcode, `DerivedData`, `*.xcuserstate`, `Config/Secrets.xcconfig`, `.DS_Store`, **`/design/` and `*.pdf`**: task material stays local because the repo will be public)
+- `.gitignore` (Xcode, `DerivedData`, `*.xcuserstate`, `Config/Secrets.xcconfig`, `.DS_Store`). The brief PDF and `design/` live outside the repo folder, so they can't be committed.
 - Commit `/spec` **before any code**, so the history shows the spec came first.
 - Commit: `docs: add technical spec`
 
 ## Step 1 — Project skeleton & composition root
 **Implements:** `04 §2, §3.1, §4` (skeleton only)
-- Xcode project `FlightResults` (iOS 16, Swift 6 mode, iPhone portrait, light style), unit-test target `FlightResultsTests`.
+- Xcode project `FlightResults` (iOS 18, Swift 6 mode, iPhone portrait, light style), unit-test target `FlightResultsTests`.
 - Remove Main.storyboard; `SceneDelegate` creates the window → `AppCoordinator` → `FlightResultsCoordinator` → placeholder navy VC.
 - `Config/Base.xcconfig` with `#include? "Secrets.xcconfig"`, `Secrets.example.xcconfig`, Info.plist `SERPAPI_API_KEY = $(SERPAPI_API_KEY)`, `AppConfig`.
-- Folder structure created as in `04 §2`.
+- Folder structure as in `04 §2` (folders are created when their first file is added; git doesn't track empty folders).
+- Unit-test guard in `SceneDelegate` / `AppEnvironment.isRunningUnitTests` (`04 §4`).
+- `NOTES.md` created **now**, with sections: AI tool, How I directed the AI, Corrections log, Thrown away, My decisions. It is filled in as each step happens.
+- `Secrets.example.xcconfig` holds a **dummy key** until the real one arrives.
 
 **Review:** coordinators retained through `childCoordinators`; no storyboard reference left in Info.plist; builds with no `Secrets.xcconfig`; 0 warnings.
-**AC:** A9, G17 (partly)
+**AC:** A9, A10, G17 (partly)
 **Commit:** `app: set up UIKit project with AppCoordinator and config`
 
-## Step 2 — Models, DTOs, decoding helpers
+## Step 2 — Capture the real SerpApi response (gate for the data layer)
+**Why first:** decoding is strict (D-32), so the DTOs must match **real** SerpApi JSON, not the docs from memory. One wrongly required field would make the live app always show the error state.
+- **Needs the real key.** Until it arrives, the dummy key is in place. Only the **DTOs, the mapper, and service tests that decode real JSON** wait. Everything that doesn't depend on the response shape goes ahead: domain models (Step 3 without DTOs), request builder and HTTP client (part of Step 5), formatters and sorter (part of Step 7), Coordinator (Step 8), theme and header (Step 9).
+- Run one live search (DAC→JFK, 2 adults, date = today + 30) with `curl`, and save the response to `FlightResults/Resources/Fixtures/serpapi_dac_jfk_oneway.json`. **Strip `api_key`** from every URL inside the JSON.
+- From the real JSON, write down which fields are always present and which are sometimes missing, then adjust `03 §2` (which fields are optional) before writing the DTOs.
+- Run one extra search for a route/date with no flights, and record the **exact** "no results" message to confirm `02 §4`.
+- Compare one price with Google Flights for 2 adults to confirm the price is the total (D-05). Record the result in NOTES.md.
+
+**Review:** `grep` the fixture for the key; spec `03 §2` updated in the same commit if anything changed.
+**AC:** H2
+**Commit:** `data: capture real SerpApi response fixture`
+
+## Step 3 — Models & DTOs (from the real response)
 **Implements:** `03 §1.1, §2, §3`
 - `FlightSearchRequest`, `FlightOffer`, `FlightEndpoint`, `LocalDateTime`, `Promotion`, `DateFare`, `SortOption`
 - DTOs and domain models, all `Codable` (D-32); `JSONDecoder.serpApi` (snake_case)
@@ -36,16 +51,16 @@
 **AC:** B8, B10, B13
 **Commit:** `model: add Codable domain models and SerpApi DTOs`
 
-## Step 3 — Mapper (the core of the data layer)
+## Step 4 — Mapper (the core of the data layer)
 **Implements:** `03 §4`, fixtures `03 §8` (mapping ones)
 - `FlightOfferMapper` (pure), time parsing, day offset, id, dedupe
 - `FlightOfferMapperTests` + JSON fixtures
 
-**Review:** stops come from legs, not `layovers.count`; departure is the **first** leg and arrival the **last** leg (AI often uses the first leg for both); `DateFormatter` is static, `en_US_POSIX`, UTC; day offset uses calendar days, not `hours / 24`; invalid groups are skipped, not thrown.
+**Review:** stops come from legs, not `layovers.count`; departure is the **first** leg and arrival the **last** leg (AI often uses the first leg for both); `DateFormatter` is created once per mapper instance (not static, not per group), `en_US_POSIX`, UTC; day offset uses calendar days, not `hours / 24`; invalid groups are skipped, not thrown.
 **AC:** B3–B7, B9, B11, B12
 **Commit:** `data: flatten SerpApi flight groups into FlightOffer`
 
-## Step 4 — Networking, service, errors, cache
+## Step 5 — Networking, service, errors, cache
 **Implements:** `03 §1.2, §4.8`, `02 §4`, `04 §3.4, §6`
 - `HTTPClient` + `URLSessionHTTPClient`, `SerpApiRequestBuilder`, `RemoteFlightsDataSource`, `SerpApiErrorClassifier`, `FlightSearchError`, `SerpApiFlightSearchService`, `CachedFlightsDataSource`, `Log` + redaction
 - Tests for all of the above using `MockHTTPClient` / mock data source. **No test hits the network.**
@@ -54,17 +69,15 @@
 **AC:** B1, B2, C1–C10
 **Commit(s):** `data: add SerpApi request builder and HTTP client`, `data: add flight search service with error classification`, `data: add debug response cache`
 
-## Step 5 — Capture real fixture
-- With the key: run one live search (DAC→JFK, 2 adults). Compare one price with Google Flights for 2 adults to confirm SerpApi's price is the total (D-05) and write the result in NOTES.md.
-- Save the JSON response to `Resources/Fixtures/serpapi_dac_jfk_oneway.json`. **Strip `api_key`** from `search_metadata` / `search_parameters` URLs.
+## Step 6 — Fixture/stub data sources & state-forcing schemes
 - `FixtureFlightsDataSource`, `StubFlightSearchService`, `DummyContentProvider`, `AppEnvironment.make` selection logic, 5 shared schemes.
 - Sanity test: the bundled fixture maps to ≥ 1 offer and includes at least one 1-stop or 2-stop offer.
 
-**Review:** `grep` the fixture for the key; launch args read only in `AppEnvironment`.
-**AC:** A8, H2
+**Review:** launch args read only in `AppEnvironment`.
+**AC:** A8
 **Commit:** `app: add fixture/stub data sources and state-forcing schemes`
 
-## Step 6 — Formatters & ViewModel
+## Step 7 — Formatters & ViewModel
 **Implements:** `03 §5, §6, §7`, `02 §1, §3, §4`, `04 §3.2, §3.3`
 - Formatters + `FormatterTests`
 - `FlightOfferSorter` + tests
@@ -72,11 +85,11 @@
 - `MockFlightSearchService` (result + continuation mode), `SpyCoordinatorDelegate`, `FlightOffer.fake(...)`
 - `FlightResultsViewModelTests`
 
-**Review:** `import Foundation` only; `@MainActor`; `weak` delegate; re-entry guard + generation check; cancellation not turned into error; `onStateChange` fires exactly once per change; sort isn't done in the View; `sorted(by:)` made stable; `NumberFormatter` grouping is actually on under `en_US_POSIX` (test F1 proves it).
+**Review:** `import Foundation` only; `@MainActor`; `weak` delegate; re-entry guard + generation check; cancellation not turned into error; `onStateChange` fires exactly once per change; sort isn't done in the View; `sorted(by:)` made stable; `NumberFormatter` grouping is actually on under `en_US_POSIX` (test F1 proves it); no static formatters (A11).
 **AC:** A1–A3, A6, A7, D1–D12, E1–E9, F1–F5
 **Commits:** `formatting: add price, duration and date formatters`, `viewmodel: add sorting`, `viewmodel: add FlightResultsViewModel with state machine`
 
-## Step 7 — Coordinator navigation
+## Step 8 — Coordinator navigation
 **Implements:** `04 §3.1`, D-18, D-23
 - `FlightResultsCoordinator` builds VM + VC, conforms to the delegate, opens `SFSafariViewController` for http(s) only, logs flight selection.
 
@@ -84,7 +97,7 @@
 **AC:** A4, A5, G9 (after UI exists)
 **Commit:** `coordinator: open promotions in Safari view controller`
 
-## Step 8 — Theme & pinned header area
+## Step 9 — Theme & pinned header area
 **Implements:** `05 §1, §2.1–2.3`
 - `Theme` (colors, typography, spacing), `RouteHeaderView`, `DateFareStripView` + chip cell, `SortFilterBarView` (button only, no dropdown yet)
 - VC root layout: pinned header stack + empty collection view below.
@@ -93,7 +106,7 @@
 **AC:** G5, G6, G7
 **Commit:** `ui: add route header, date fare strip and sort/filter bar`
 
-## Step 9 — Flight card
+## Step 10 — Flight card
 **Implements:** `05 §3.1`
 - `FlightCardCell`, `FlightTimelineView`, `DashedLineView`, `ImageLoader`
 - Collection view + diffable data source (success state only), rendering fixture data.
@@ -102,7 +115,7 @@
 **AC:** G2, G11, G12, G15
 **Commit:** `ui: add flight card cell and results list`
 
-## Step 10 — Promo carousel
+## Step 11 — Promo carousel
 **Implements:** `05 §3.2`, D-22
 - Own `promo_discount` artwork (D-30, not cropped from the design), `PromoCardCell`, orthogonal section, section placement logic (after card 2 / fewer than 2 cards), tap → VM intent.
 
@@ -110,7 +123,7 @@
 **AC:** G8, G9
 **Commit:** `ui: add discount carousel between flight cards`
 
-## Step 11 — Loading state
+## Step 12 — Loading state
 **Implements:** `05 §3.3, §3.4, §4`, `02 §2.1`
 - `ShimmerView`, `SkeletonCardCell`, `LoadingBannerCell` (progress bar), strip fare shimmer, chart border colour per state.
 
@@ -118,14 +131,14 @@
 **AC:** G1, G13, G14
 **Commit:** `ui: add loading skeletons with shimmer and progress banner`
 
-## Step 12 — Empty & error states
+## Step 13 — Empty & error states
 **Implements:** `05 §3.5`, `02 §2.3, §2.4`
 - `EmptyStateView`, `ErrorStateView`, backgroundView switching, sort-button disabling, Try Again → retry.
 
 **AC:** G3, G4, G17
 **Commit:** `ui: add empty and error states with retry`
 
-## Step 13 — Sort dropdown
+## Step 14 — Sort dropdown
 **Implements:** `05 §2.4`, `02 §2.2`
 - `SortDropdownView` overlay, chevron animation, `selectSort`, in-place animated re-sort.
 
@@ -133,16 +146,16 @@
 **AC:** G10
 **Commit:** `ui: add sort dropdown with in-place reordering`
 
-## Step 14 — Verification & polish
+## Step 15 — Verification & polish
 - Run the entire `06` checklist. Capture screenshots of the 4 states + sort into `docs/screenshots/`.
 - Live run with the real key (G16), iOS 18 run, small/large screen (G18).
 - Memory graph check (A7). Grep checks (A1–A5, A8, H2).
 - Fix findings as separate small commits.
 **Commit:** `chore: verification fixes` (as needed)
 
-## Step 15 — README & NOTES
+## Step 16 — README & NOTES
 - `README.md`: setup (key), schemes, tests command, architecture diagram (from `04 §1`), known limitations.
-- `NOTES.md`: AI tool (Claude Code + model), how it was directed (spec → step prompts), **Corrections log** (accumulated), code thrown away, decisions that were mine (cross-reference the ✔ Reviewed items and D-numbers in `01`), what I'd do with more time.
+- `NOTES.md` (created in Step 1, filled in along the way; finalise it here): AI tool (Claude Code + model), how it was directed (spec → step prompts), **Corrections log** (accumulated), code thrown away, decisions that were mine (cross-reference the ✔ Reviewed items and D-numbers in `01`), what I'd do with more time.
 **AC:** H1–H6
 **Commit:** `docs: add README and NOTES`
 

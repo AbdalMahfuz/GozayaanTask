@@ -1,7 +1,3 @@
-# Task material (not for public repo)
-/design/
-*.pdf
-
 # Secrets
 Config/Secrets.xcconfig
 

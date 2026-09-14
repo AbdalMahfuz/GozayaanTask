@@ -48,7 +48,7 @@
 ## 2. Project structure
 
 ```
-FlightResults.xcodeproj                      ← repo root (brief)
+FlightResults.xcodeproj                      ← repo root (brief); repo = workspace/FlightResults/
 FlightResults/
 ├── App/
 │   ├── AppDelegate.swift
@@ -268,6 +268,8 @@ struct AppEnvironment {
     static func make(processInfo: ProcessInfo = .processInfo, config: AppConfig = .fromBundle(), now: Date = .now) -> AppEnvironment
 }
 ```
+**Unit-test guard:** the test target runs inside the app, so the app launches before the tests run. If `ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil`, `SceneDelegate` shows a plain empty root view controller and **does not start any coordinator**. This way tests never trigger a live SerpApi search or use quota. The check lives in `AppEnvironment.isRunningUnitTests`, next to the other process-info reads.
+
 Selection logic (the only place `#if DEBUG` and launch arguments are read):
 ```
 #if DEBUG

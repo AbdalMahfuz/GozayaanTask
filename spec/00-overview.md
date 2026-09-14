@@ -16,7 +16,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 | `02-screen-states.md` | The 4 states, what triggers each, transitions, what shows in each |
 | `03-data-model-and-mapping.md` | SerpApi response DTOs, the `FlightOffer` model, flattening rules, edge cases, test fixtures |
 | `04-architecture.md` | Layers, types, protocols, dependency injection, import rules, concurrency, errors |
-| `05-ui-spec.md` | Visual spec measured from `/design`: colours, sizes, components, motion, accessibility |
+| `05-ui-spec.md` | Visual spec measured from `../design`: colours, sizes, components, motion, accessibility |
 | `06-acceptance-criteria.md` | Numbered, testable "done" criteria, each tied to a unit test or manual check |
 | `07-implementation-plan.md` | Step-by-step build order (one AI prompt per step and one commit per step), plus a review checklist |
 
@@ -45,7 +45,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 
 ## 4. Deliverables (from the brief)
 - `/spec`: this folder.
-- The Xcode project at the repo root.
+- The Xcode project at the repo root. **Repo layout:** the git repo is the `FlightResults/` folder inside the local workspace. The brief PDF and `design/` sit next to it in the workspace (`../design`), outside the repo, so they can't be pushed by accident.
 - `NOTES.md`: which AI tool was used, what was corrected or thrown away, and which decisions were our own.
 - `README.md`: how to run the app (API key setup, schemes, forcing each state).
 - Git history kept, with one meaningful commit per step in `07`.
@@ -55,7 +55,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 |---|---|
 | Xcode | 26.5 |
 | Swift | 6.x, **Swift 6 language mode** (strict concurrency) |
-| Minimum iOS | 16.0 |
+| Minimum iOS | 18.0 (D-01) |
 | Device | iPhone, portrait only |
 | UI | UIKit, all in code (no storyboards except LaunchScreen) |
 | Dependencies | **None** (no SPM or CocoaPods packages) |

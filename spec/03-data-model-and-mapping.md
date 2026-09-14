@@ -181,7 +181,7 @@ The id must stay the same across requests and re-sorts, and must be unique withi
 | `arrivalDayOffset` | §4.5 |
 
 ### 4.4 Time parsing
-- Format `yyyy-MM-dd HH:mm`, parsed with a `DateFormatter` (locale `en_US_POSIX`, time zone UTC, Gregorian). The formatter is created **once** as a static, never per call.
+- Format `yyyy-MM-dd HH:mm`, parsed with a `DateFormatter` (locale `en_US_POSIX`, time zone UTC, Gregorian). The formatter is created **once per `FlightOfferMapper` instance** (a stored property set in `init`), never per group or per call. It is **not** a `static let`: `DateFormatter` isn't `Sendable`, so Swift 6 rejects a global or static one unless it's marked `nonisolated(unsafe)`, which rule R8 forbids.
 - The resulting `Date` is split into components (UTC calendar) → `LocalDateTime`.
 - If parsing fails, the group is **invalid**.
 
@@ -246,6 +246,8 @@ Swift's `sorted(by:)` isn't guaranteed to be stable, so sort on `enumerated()` w
 | `HeaderDateFormatter` | Date → `"15 Oct, 2026"` | `dd MMM, yyyy`, `en_US_POSIX`, UTC |
 | `ChipDateFormatter` | Date → `"Sun 08 Feb"` | `EEE dd MMM`, `en_US_POSIX`, UTC |
 | `PassengerFormatter` | Int → `"01"` | `1→"01"`, `12→"12"` |
+
+**Formatter lifetime (all rows):** each formatter struct creates its `DateFormatter`/`NumberFormatter` once in `init` and keeps it as a stored property. The ViewModel owns one `FlightFormatters` bundle on the main actor. There are no `static` formatter instances, for the same Swift 6 reason as §4.4, and none are created per cell or per call.
 
 `PriceFormatter` uses a `NumberFormatter` with `numberStyle = .decimal`, `locale = en_US_POSIX`, `groupingSeparator = ","`, `groupingSize = 3`, `usesGroupingSeparator = true`, and `maximumFractionDigits = 0`. `en_US_POSIX` doesn't group by default, so the grouping settings must be set explicitly, and a test covers it.
 

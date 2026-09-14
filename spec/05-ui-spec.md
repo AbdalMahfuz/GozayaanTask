@@ -1,6 +1,6 @@
 # 05 — UI Spec
 
-**Source of truth:** `/design` (kept local and git-ignored; the reviewers have the same frames in their Figma file)
+**Source of truth:** `../design` (in the local workspace, outside the repo; the reviewers have the same frames in their Figma file)
 | File | Frame |
 |---|---|
 | `Flight Result - After Search, One Way-1.png` | **Loading** (skeleton shimmer) |
@@ -194,7 +194,7 @@ All respect `UIAccessibility.isReduceMotionEnabled` (fades only, no shimmer, no 
 ## 5. Assets to produce
 | Asset | Source |
 |---|---|
-| `promo_discount` | **Our own artwork** (D-30): navy background, yellow tag/% glyph, "Up to 18% off" in white. 64×52 pt at @2x and @3x. Nothing copied from `/design`. |
+| `promo_discount` | **Our own artwork** (D-30): navy background, yellow tag/% glyph, "Up to 18% off" in white. 64×52 pt at @2x and @3x. Nothing copied from the design. |
 | `coin` | Crop from success PNG around "Get Points" coin (@2x), or the SF Symbol fallback |
 | `airline_placeholder` | Generated: rounded rect `systemGray5` |
 | AppIcon | Simple navy + yellow plane glyph (optional polish) |

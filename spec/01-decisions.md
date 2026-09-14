@@ -8,10 +8,10 @@ Every such point is listed here with its decision and reasoning.
 
 ## Platform & project
 
-### D-01 — UIKit, all in code, iOS 16+, Swift 6 language mode
+### D-01 — UIKit, all in code, iOS 18+, Swift 6 language mode ✔ Reviewed
 - **Why UIKit:** the Coordinator pattern fits UIKit naturally, because `UINavigationController` is a real object the Coordinator owns and pushes or presents on. In SwiftUI, a Coordinator usually ends up wrapping `NavigationStack` state, which weakens the boundary the brief scores.
 - **Why no storyboards:** dependencies go in through initializers, and diffs stay reviewable.
-- **Why iOS 16:** it covers async/await, `UICollectionViewCompositionalLayout`, diffable data sources and `UIButton.Configuration`, with no availability checks. Close to every device in use supports it.
+- **Why iOS 18:** it's the oldest simulator runtime installed on the development Mac, so it is the oldest version we can actually test. Claiming iOS 16 support without running it would be a guess. It covers everything we use (async/await, compositional layout, diffable data sources, `UIButton.Configuration`) with no availability checks. The only cost is dropping iOS 16–17 users, which doesn't matter for a take-home.
 - **Why Swift 6 mode:** the compiler catches data races (a ViewModel updating UI off the main thread, services that aren't `Sendable`). That is a class of AI-written bug we want caught at build time.
 
 ### D-02 — No third-party dependencies
@@ -34,7 +34,7 @@ Shimmer, image loading and JSON decoding are small enough to write ourselves. Th
 ### D-05 — Passengers: **2 adults**, shown as `02`; price treated as the **total** for all passengers ✔ Reviewed ↻ May change
 - Matches the design (`👤 02`).
 - SerpApi's `price` is treated as the **total fare for all passengers** and shown as-is under "Starting from". It is **not** divided per person.
-- Risk accepted: if SerpApi turns out to return a per-person fare, the displayed number would be half the real total. Check this against Google Flights once the real fixture is captured (Step 5) and note the result in NOTES.md.
+- Risk accepted: if SerpApi turns out to return a per-person fare, the displayed number would be half the real total. Check this against Google Flights once the real fixture is captured (Step 2) and note the result in NOTES.md.
 - `adults` is a single value in `FlightSearchRequest` (built in `AppEnvironment`), so changing it later is a one-line change; the header, request and tests all read from it.
 
 ### D-06 — Fixed query: `type=2` (one-way), `currency=BDT`, `hl=en`, `gl=bd`, `adults=2`
@@ -159,10 +159,10 @@ The design uses a geometric brand typeface (Gilroy-like) that isn't licensed or 
 - Dynamic Type isn't applied (the dense card layout is measured at fixed sizes). VoiceOver **is** supported through combined accessibility labels. This is a known limitation, listed in the README.
 
 ### D-29 — Colours sampled directly from the design PNGs
-Exact hex values in `05-ui-spec.md` came from pixel sampling of `/design/*.png`, not from guesses.
+Exact hex values in `05-ui-spec.md` came from pixel sampling of `../design/*.png`, not from guesses.
 
 ### D-30 — Promo images: our own generic placeholder artwork, bundled as an asset
-- The repo will be **public**, and `/design` plus the task PDF are git-ignored. Copying the design's "18% Discount / City Bank / AMEX" artwork (which also shows third-party bank logos) into the app would publish it anyway.
+- The repo will be **public**, and `design/` plus the task PDF are kept outside the repo. Copying the design's "18% Discount / City Bank / AMEX" artwork (which also shows third-party bank logos) into the app would publish it anyway.
 - Instead, a simple original image: navy background, a yellow "%" / tag glyph and the text "Up to 18% off", at the same size as the design (64×52 pt @2x/@3x). It's added to `Assets.xcassets` as `promo_discount`.
 - The dummy `Promotion.imageName` refers to it, so no image loading or network dependency is needed.
 
