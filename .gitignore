@@ -1,0 +1,21 @@
+# Task material (not for public repo)
+/design/
+*.pdf
+
+# Secrets
+Config/Secrets.xcconfig
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# macOS
+.DS_Store
