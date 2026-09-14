@@ -26,11 +26,11 @@ final class FlightResultsViewController: UIViewController {
         return view
     }()
 
-    private lazy var cardCellRegistration = UICollectionView.CellRegistration<FlightCardCell, String> {
-        [weak self] cell, _, id in
-        guard let card = self?.cardsByID[id] else { return }
-        cell.configure(with: card, imageLoader: self?.imageLoader)
-    }
+    // Not `lazy`: a `lazy var` here would be constructed the first time it's
+    // accessed, which is the first time a cell is actually requested —
+    // UIKit flags that as "registration created inside the cell provider"
+    // even though it's cached from then on. Built eagerly in `init` instead.
+    private var cardCellRegistration: UICollectionView.CellRegistration<FlightCardCell, String>!
 
     private lazy var dataSource: UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem> = {
         UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
@@ -49,6 +49,10 @@ final class FlightResultsViewController: UIViewController {
         self.viewModel = viewModel
         self.imageLoader = imageLoader
         super.init(nibName: nil, bundle: nil)
+        cardCellRegistration = UICollectionView.CellRegistration<FlightCardCell, String> { [weak self] cell, _, id in
+            guard let card = self?.cardsByID[id] else { return }
+            cell.configure(with: card, imageLoader: self?.imageLoader)
+        }
     }
 
     @available(*, unavailable)
