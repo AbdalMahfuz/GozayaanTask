@@ -1,0 +1,10 @@
+// Shared build settings for the FlightResults app target.
+//
+// The SerpApi key lives in Secrets.xcconfig, which is git-ignored.
+// Copy Secrets.example.xcconfig to Secrets.xcconfig and put your key there.
+// `#include?` keeps the project building when the file is missing; the app
+// then shows the "Search unavailable" error state instead of crashing.
+
+SERPAPI_API_KEY =
+
+#include? "Secrets.xcconfig"

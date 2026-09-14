@@ -1,0 +1,32 @@
+# NOTES
+
+Filled in step by step while building (see `spec/07-implementation-plan.md`), not written from memory at the end.
+
+## AI tool
+- **Claude Code** (CLI), model Claude Opus 5.
+
+## How I directed the AI
+- **Option A:** the spec in `/spec` came first. The AI drafted it from the brief and the design PNGs; I reviewed it and changed the decisions listed below before any code was written.
+- Development follows the plan in `spec/07-implementation-plan.md`: one focused prompt per step, then build, test, my review and a commit.
+
+## Corrections log
+What the AI produced, what was wrong with it, and what I changed.
+
+| # | Step | AI output | Problem | Correction | Caught by |
+|---|---|---|---|---|---|
+| 1 | Spec | Added a decorative **Edit** button, because the brief mentions one | The design has no Edit button, and UI is judged against the design | Removed (D-19) | me |
+| 2 | Spec | `FlightOffer` not `Codable`; lossy decoding that silently dropped broken groups | The brief asks for Codable models; silently hiding bad data makes problems invisible | All models `Codable`; strict decoding, so a decoding failure shows the error state (D-32) | me |
+| 3 | Spec | 1 adult, to avoid the question of whether the price is per person | The design shows 2 passengers | 2 adults, price treated as the total; to be verified against the real response (D-05) | me |
+| 4 | Spec | Planned to crop the promo artwork (including bank logos) from the design into the app | The repo will be public | Own placeholder artwork (D-30) | AI flagged it once I said the repo will be public; I accepted |
+| 5 | Spec | Xcode project at the root of the workspace, next to the brief PDF and design files | Task material could be pushed by accident | The repo is its own `FlightResults/` folder; the PDF and design stay outside it | me |
+| 6 | Spec | Response structs designed from the SerpApi docs, from memory | With strict decoding, a single wrong required field would break the live app | Capture a real response first (plan Step 2) | AI, when I asked it to check the spec for gaps |
+| 7 | Spec | Planned `static` shared date/number formatters | Rejected by Swift 6 strict concurrency (non-`Sendable` static) | One formatter per instance (A11) | AI, when I asked it to check the spec for gaps |
+| 8 | Spec | Unit tests hosted in the app with no guard | Every test run would launch a live SerpApi search | Unit-test guard in `SceneDelegate` (A10) | AI, when I asked it to check the spec for gaps |
+| 9 | Spec | Minimum iOS 16 | No iOS 16 simulator on this Mac, so it could never be tested | iOS 18 (D-01) | AI, when I asked it to check the spec for gaps |
+
+## Thrown away
+- *(nothing yet)*
+
+## Decisions that were mine
+- Reviewed and confirmed or changed: D-01, D-03, D-05, D-18, D-19, D-27, D-30, D-32 (see `spec/01-decisions.md`).
+- Repo layout, commit identity, and no AI attribution lines in commits (AI use is disclosed here instead).
