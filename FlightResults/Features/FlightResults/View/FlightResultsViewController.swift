@@ -17,8 +17,10 @@ final class FlightResultsViewController: UIViewController {
     private var cardsByID: [String: FlightCardViewData] = [:]
 
     private lazy var collectionView: UICollectionView = {
+        // Guard `dataSource` — this layout callback can run while the CV is
+        // still being created, before `makeDataSource()` has assigned it.
         let layout = FlightResultsLayout.make { [weak self] index in
-            self?.dataSource.snapshot().sectionIdentifiers[safe: index]
+            self?.dataSource?.snapshot().sectionIdentifiers[safe: index]
         }
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .clear
@@ -26,33 +28,15 @@ final class FlightResultsViewController: UIViewController {
         return view
     }()
 
-    // Not `lazy`: a `lazy var` here would be constructed the first time it's
-    // accessed, which is the first time a cell is actually requested —
-    // UIKit flags that as "registration created inside the cell provider"
-    // even though it's cached from then on. Built eagerly in `init` instead.
-    private var cardCellRegistration: UICollectionView.CellRegistration<FlightCardCell, String>!
-
-    private lazy var dataSource: UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem> = {
-        UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
-            guard let self else { return UICollectionViewCell() }
-            switch item {
-            case .flight(let id):
-                return collectionView.dequeueConfiguredReusableCell(using: self.cardCellRegistration, for: indexPath, item: id)
-            case .loadingBanner, .skeleton, .promotion:
-                // Built in plan steps 11–12.
-                return UICollectionViewCell()
-            }
-        }
-    }()
+    // Built once in `viewDidLoad` via `makeDataSource()`. Must not be `lazy`:
+    // a lazy data source (or lazy registration) first touched from the cell
+    // provider is flagged by UIKit as "registration created inside cell provider".
+    private var dataSource: UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem>!
 
     init(viewModel: FlightResultsViewModel, imageLoader: ImageLoading) {
         self.viewModel = viewModel
         self.imageLoader = imageLoader
         super.init(nibName: nil, bundle: nil)
-        cardCellRegistration = UICollectionView.CellRegistration<FlightCardCell, String> { [weak self] cell, _, id in
-            guard let card = self?.cardsByID[id] else { return }
-            cell.configure(with: card, imageLoader: self?.imageLoader)
-        }
     }
 
     @available(*, unavailable)
@@ -64,18 +48,36 @@ final class FlightResultsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = Theme.Colors.navy
 
+        // Data source + registration before the CV joins the hierarchy, so the
+        // first layout pass never constructs them from inside a cell request.
+        dataSource = makeDataSource()
         setUpLayout()
         routeHeaderView.configure(with: viewModel.header)
         sortFilterBarView.onSortTapped = { [weak self] in
             self?.toggleSort()
         }
-        _ = dataSource // force the lazy data source to attach before the first snapshot
 
         viewModel.onStateChange = { [weak self] state in
             self?.render(state)
         }
         render(viewModel.state)
         viewModel.start()
+    }
+
+    private func makeDataSource() -> UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem> {
+        let registration = UICollectionView.CellRegistration<FlightCardCell, String> { [weak self] cell, _, id in
+            guard let self, let card = cardsByID[id] else { return }
+            cell.configure(with: card, imageLoader: imageLoader)
+        }
+        return UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
+            switch item {
+            case .flight(let id):
+                return collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: id)
+            case .loadingBanner, .skeleton, .promotion:
+                // Built in plan steps 11–12.
+                return UICollectionViewCell()
+            }
+        }
     }
 
     private func setUpLayout() {
