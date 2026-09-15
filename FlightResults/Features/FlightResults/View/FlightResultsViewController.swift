@@ -1,8 +1,8 @@
 import UIKit
 
 /// Pinned header (route header, date strip, sort/filter bar) + a scrolling
-/// results area below. Loading skeletons and the success-state card list
-/// both render; empty/error views are built in plan step 13.
+/// results area below, covering the loading, success, empty and error
+/// states (spec 02).
 final class FlightResultsViewController: UIViewController {
     private let viewModel: FlightResultsViewModel
     private let imageLoader: ImageLoading
@@ -10,6 +10,8 @@ final class FlightResultsViewController: UIViewController {
     private let routeHeaderView = RouteHeaderView()
     private let dateFareStripView = DateFareStripView()
     private let sortFilterBarView = SortFilterBarView()
+    private let emptyStateView = EmptyStateView()
+    private let errorStateView = ErrorStateView()
 
     // Items carry ids only; content is looked up here, rebuilt on every
     // render (spec 04 §3.5).
@@ -54,6 +56,9 @@ final class FlightResultsViewController: UIViewController {
         routeHeaderView.configure(with: viewModel.header)
         sortFilterBarView.onSortTapped = { [weak self] in
             self?.toggleSort()
+        }
+        errorStateView.onRetry = { [weak self] in
+            self?.viewModel.retry()
         }
 
         viewModel.onStateChange = { [weak self] state in
@@ -138,6 +143,7 @@ final class FlightResultsViewController: UIViewController {
         )
 
         var snapshot = NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>()
+        collectionView.backgroundView = nil
         switch state {
         case .loading:
             cardsByID = [:]
@@ -152,9 +158,14 @@ final class FlightResultsViewController: UIViewController {
             // Carousel after the 2nd card, or after the last card with fewer
             // than 2 (D-22).
             appendCarouselSplit(items: cards.map { .flight(id: $0.id) }, to: &snapshot)
-        case .empty, .error:
+        case .empty(let data):
             cardsByID = [:]
-            // Empty/error views: plan step 13.
+            emptyStateView.configure(with: data)
+            collectionView.backgroundView = emptyStateView
+        case .error(let data):
+            cardsByID = [:]
+            errorStateView.configure(with: data)
+            collectionView.backgroundView = errorStateView
         }
         dataSource.apply(snapshot, animatingDifferences: true)
     }
