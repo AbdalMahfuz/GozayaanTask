@@ -1,7 +1,7 @@
 import UIKit
 
-/// Spec 05 §2.3. The dropdown itself is added in plan step 14 — this is the
-/// button only. Filter is decorative (no target).
+/// Spec 05 §2.3. The button bar; `SortDropdownView` is a separate overlay
+/// the VC presents on tap. Filter is decorative (no target).
 final class SortFilterBarView: UIView {
     let sortButton = UIButton(type: .system)
     private let filterButton = UIButton(type: .system)
@@ -24,6 +24,16 @@ final class SortFilterBarView: UIView {
         sortButton.configuration = config
         sortButton.isEnabled = isEnabled
         sortButton.alpha = isEnabled ? 1 : 0.5
+    }
+
+    /// Rotates the chevron to face up while the dropdown is open (spec 05
+    /// §2.3: `chevron.down` → visually `chevron.up`, 0.2 s).
+    func setDropdownExpanded(_ expanded: Bool) {
+        let transform = expanded ? CGAffineTransform(rotationAngle: .pi) : .identity
+        let duration = UIAccessibility.isReduceMotionEnabled ? 0 : 0.2
+        UIView.animate(withDuration: duration) {
+            self.sortButton.imageView?.transform = transform
+        }
     }
 
     private func setUp() {

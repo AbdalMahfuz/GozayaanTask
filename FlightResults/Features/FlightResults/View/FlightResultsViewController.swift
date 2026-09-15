@@ -16,6 +16,11 @@ final class FlightResultsViewController: UIViewController {
     // Items carry ids only; content is looked up here, rebuilt on every
     // render (spec 04 §3.5).
     private var cardsByID: [String: FlightCardViewData] = [:]
+    private var sortDropdownView: SortDropdownView?
+    // Tracks whether the *previous* render was `.success`, so a fresh set of
+    // results (e.g. after retry) scrolls to the top, but a re-sort of the
+    // same results doesn't (spec 02 §2.2).
+    private var wasShowingSuccess = false
 
     private lazy var collectionView: UICollectionView = {
         // Guard `dataSource` — this layout callback can run while the CV is
@@ -137,16 +142,18 @@ final class FlightResultsViewController: UIViewController {
         }
 
         dateFareStripView.configure(dateFares: viewModel.dateFares, isLoading: isLoading)
-        sortFilterBarView.configure(
-            sortTitle: viewModel.sortOption == .cheapest ? "Cheapest" : "Fastest",
-            isEnabled: sortEnabled
-        )
+        sortFilterBarView.configure(sortTitle: viewModel.sortOption.displayTitle, isEnabled: sortEnabled)
+        if let dropdown = sortDropdownView {
+            dropdown.configure(selected: viewModel.sortOption)
+        }
 
         var snapshot = NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>()
         collectionView.backgroundView = nil
+        var isNewResults = false
         switch state {
         case .loading:
             cardsByID = [:]
+            wasShowingSuccess = false
             snapshot.appendSections([.loadingBanner])
             snapshot.appendItems([.loadingBanner], toSection: .loadingBanner)
             appendCarouselSplit(
@@ -155,19 +162,26 @@ final class FlightResultsViewController: UIViewController {
             )
         case .success(let cards):
             cardsByID = Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0) })
+            isNewResults = !wasShowingSuccess
+            wasShowingSuccess = true
             // Carousel after the 2nd card, or after the last card with fewer
             // than 2 (D-22).
             appendCarouselSplit(items: cards.map { .flight(id: $0.id) }, to: &snapshot)
         case .empty(let data):
             cardsByID = [:]
+            wasShowingSuccess = false
             emptyStateView.configure(with: data)
             collectionView.backgroundView = emptyStateView
         case .error(let data):
             cardsByID = [:]
+            wasShowingSuccess = false
             errorStateView.configure(with: data)
             collectionView.backgroundView = errorStateView
         }
-        dataSource.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: true) { [weak self] in
+            guard isNewResults else { return }
+            self?.collectionView.setContentOffset(.zero, animated: false)
+        }
     }
 
     /// Places the promo carousel after the 2nd item, or after the last item
@@ -195,14 +209,41 @@ final class FlightResultsViewController: UIViewController {
         }
     }
 
-    // Temporary stand-in until plan step 14 adds `SortDropdownView`: cycles
-    // the two options directly so the ViewModel's sorting is exercisable
-    // end to end before the real dropdown exists. Replaced, not kept, in
-    // step 14.
     private func toggleSort() {
-        let next: SortOption = viewModel.sortOption == .cheapest ? .fastest : .cheapest
-        viewModel.selectSort(next)
-        sortFilterBarView.configure(sortTitle: next == .cheapest ? "Cheapest" : "Fastest", isEnabled: true)
+        if let dropdown = sortDropdownView {
+            closeDropdown(dropdown)
+        } else {
+            openDropdown()
+        }
+    }
+
+    private func openDropdown() {
+        let dropdown = SortDropdownView()
+        dropdown.configure(selected: viewModel.sortOption)
+        dropdown.onSelect = { [weak self] option in
+            guard let self else { return }
+            viewModel.selectSort(option)
+            if let dropdown = sortDropdownView {
+                closeDropdown(dropdown)
+            }
+        }
+        dropdown.onDismissTapped = { [weak self] in
+            guard let self, let dropdown = sortDropdownView else { return }
+            closeDropdown(dropdown)
+        }
+        dropdown.show(
+            in: view,
+            anchorLeading: view.leadingAnchor,
+            anchorBottom: sortFilterBarView.sortButton.bottomAnchor
+        )
+        sortDropdownView = dropdown
+        sortFilterBarView.setDropdownExpanded(true)
+    }
+
+    private func closeDropdown(_ dropdown: SortDropdownView) {
+        dropdown.hide()
+        sortDropdownView = nil
+        sortFilterBarView.setDropdownExpanded(false)
     }
 }
 
