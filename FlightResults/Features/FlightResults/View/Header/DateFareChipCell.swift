@@ -6,7 +6,7 @@ final class DateFareChipCell: UICollectionViewCell {
 
     private let dateLabel = UILabel()
     private let priceLabel = UILabel()
-    private let shimmerBar = UIView()
+    private let shimmerBar = ShimmerView()
     private let selectionIndicator = UIView()
 
     override init(frame: CGRect) {
@@ -30,6 +30,9 @@ final class DateFareChipCell: UICollectionViewCell {
 
         priceLabel.isHidden = isLoading
         shimmerBar.isHidden = !isLoading
+        if isLoading {
+            shimmerBar.restart()
+        }
 
         isAccessibilityElement = true
         accessibilityLabel = isLoading ? "\(data.dateText), fare loading" : "\(data.dateText), \(data.priceText)"
@@ -51,6 +54,7 @@ final class DateFareChipCell: UICollectionViewCell {
 
         shimmerBar.backgroundColor = Theme.Colors.onNavy.withAlphaComponent(0.3)
         shimmerBar.layer.cornerRadius = 6
+        shimmerBar.clipsToBounds = true
         shimmerBar.isHidden = true
 
         selectionIndicator.backgroundColor = Theme.Colors.yellow

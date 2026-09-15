@@ -1,9 +1,8 @@
 import UIKit
 
 /// Pinned header (route header, date strip, sort/filter bar) + a scrolling
-/// results area below. Skeletons, promo carousel and empty/error views are
-/// built in plan steps 11–13; for now only the success-state flight cards
-/// render (plan step 10, spec 05 §2–§3.1).
+/// results area below. Loading skeletons and the success-state card list
+/// both render; empty/error views are built in plan step 13.
 final class FlightResultsViewController: UIViewController {
     private let viewModel: FlightResultsViewModel
     private let imageLoader: ImageLoading
@@ -73,15 +72,18 @@ final class FlightResultsViewController: UIViewController {
             guard let promotion = self?.viewModel.promotions.first(where: { $0.id == id }) else { return }
             cell.configure(with: promotion)
         }
+        let bannerRegistration = UICollectionView.CellRegistration<LoadingBannerCell, Void> { _, _, _ in }
+        let skeletonRegistration = UICollectionView.CellRegistration<SkeletonCardCell, Int> { _, _, _ in }
         return UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
             case .flight(let id):
                 return collectionView.dequeueConfiguredReusableCell(using: cardRegistration, for: indexPath, item: id)
             case .promotion(let id):
                 return collectionView.dequeueConfiguredReusableCell(using: promoRegistration, for: indexPath, item: id)
-            case .loadingBanner, .skeleton:
-                // Built in plan step 12.
-                return UICollectionViewCell()
+            case .loadingBanner:
+                return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: ())
+            case .skeleton(let index):
+                return collectionView.dequeueConfiguredReusableCell(using: skeletonRegistration, for: indexPath, item: index)
             }
         }
     }
@@ -136,33 +138,50 @@ final class FlightResultsViewController: UIViewController {
         )
 
         var snapshot = NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>()
-        if case .success(let cards) = state {
+        switch state {
+        case .loading:
+            cardsByID = [:]
+            snapshot.appendSections([.loadingBanner])
+            snapshot.appendItems([.loadingBanner], toSection: .loadingBanner)
+            appendCarouselSplit(
+                items: (0..<3).map { FlightResultsItem.skeleton($0) },
+                to: &snapshot
+            )
+        case .success(let cards):
             cardsByID = Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0) })
-
             // Carousel after the 2nd card, or after the last card with fewer
             // than 2 (D-22).
-            let splitIndex = min(2, cards.count)
-            let topCards = cards[..<splitIndex]
-            let bottomCards = cards[splitIndex...]
-
-            snapshot.appendSections([.listTop])
-            snapshot.appendItems(topCards.map { .flight(id: $0.id) }, toSection: .listTop)
-
-            if !viewModel.promotions.isEmpty {
-                snapshot.appendSections([.promotions])
-                snapshot.appendItems(viewModel.promotions.map { .promotion(id: $0.id) }, toSection: .promotions)
-            }
-
-            if !bottomCards.isEmpty {
-                snapshot.appendSections([.listBottom])
-                snapshot.appendItems(bottomCards.map { .flight(id: $0.id) }, toSection: .listBottom)
-            }
-        } else {
+            appendCarouselSplit(items: cards.map { .flight(id: $0.id) }, to: &snapshot)
+        case .empty, .error:
             cardsByID = [:]
+            // Empty/error views: plan step 13.
         }
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
 
-        // Skeletons, empty/error views: plan steps 12–13.
+    /// Places the promo carousel after the 2nd item, or after the last item
+    /// if there are fewer than 2 (D-22; loading uses the same rule over its
+    /// 3 skeletons, spec 02 §2 table).
+    private func appendCarouselSplit(
+        items: [FlightResultsItem],
+        to snapshot: inout NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>
+    ) {
+        let splitIndex = min(2, items.count)
+        let topItems = items[..<splitIndex]
+        let bottomItems = items[splitIndex...]
+
+        snapshot.appendSections([.listTop])
+        snapshot.appendItems(Array(topItems), toSection: .listTop)
+
+        if !viewModel.promotions.isEmpty {
+            snapshot.appendSections([.promotions])
+            snapshot.appendItems(viewModel.promotions.map { .promotion(id: $0.id) }, toSection: .promotions)
+        }
+
+        if !bottomItems.isEmpty {
+            snapshot.appendSections([.listBottom])
+            snapshot.appendItems(Array(bottomItems), toSection: .listBottom)
+        }
     }
 
     // Temporary stand-in until plan step 14 adds `SortDropdownView`: cycles
