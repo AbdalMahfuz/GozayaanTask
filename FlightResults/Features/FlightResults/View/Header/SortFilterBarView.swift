@@ -51,11 +51,22 @@ final class SortFilterBarView: UIView {
         sortConfig.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
         sortConfig.baseForegroundColor = Theme.Colors.onNavy
         sortConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-        sortConfig.titleTextAttributesTransformer = fontTransformer
+        // Stay white when disabled: the spec's disabled look is the whole
+        // button at 50 % alpha, not UIKit's grey disabled tint on top of it.
+        sortConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = Theme.Typography.button
+            outgoing.foregroundColor = Theme.Colors.onNavy
+            return outgoing
+        }
+        sortConfig.imageColorTransformer = UIConfigurationColorTransformer { _ in Theme.Colors.onNavy }
+        // Border and radius go on the configuration's background: iOS 26
+        // draws configuration buttons as capsules and ignores `layer.cornerRadius`.
+        sortConfig.cornerStyle = .fixed
+        sortConfig.background.cornerRadius = Theme.Spacing.buttonRadius
+        sortConfig.background.strokeColor = Theme.Colors.sortBorder
+        sortConfig.background.strokeWidth = 1
         sortButton.configuration = sortConfig
-        sortButton.layer.borderWidth = 1
-        sortButton.layer.borderColor = Theme.Colors.sortBorder.cgColor
-        sortButton.layer.cornerRadius = Theme.Spacing.buttonRadius
         sortButton.addTarget(self, action: #selector(sortTapped), for: .touchUpInside)
 
         var filterConfig = UIButton.Configuration.filled()
@@ -67,8 +78,9 @@ final class SortFilterBarView: UIView {
         filterConfig.baseForegroundColor = Theme.Colors.textPrimary
         filterConfig.baseBackgroundColor = Theme.Colors.yellow
         filterConfig.titleTextAttributesTransformer = fontTransformer
+        filterConfig.cornerStyle = .fixed
+        filterConfig.background.cornerRadius = Theme.Spacing.buttonRadius
         filterButton.configuration = filterConfig
-        filterButton.layer.cornerRadius = Theme.Spacing.buttonRadius
         filterButton.accessibilityLabel = "Filter"
         // Decorative: no target added.
 

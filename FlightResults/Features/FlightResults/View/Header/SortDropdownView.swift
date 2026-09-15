@@ -35,7 +35,7 @@ final class SortDropdownView: UIView {
     func configure(selected: SortOption) {
         for (option, button) in rowButtons {
             let isSelected = option == selected
-            button.backgroundColor = isSelected ? Theme.Colors.selectionTint : .clear
+            button.configuration?.background.backgroundColor = isSelected ? Theme.Colors.selectionTint : .clear
             button.accessibilityTraits = isSelected ? [.button, .selected] : .button
         }
     }
@@ -117,9 +117,10 @@ final class SortDropdownView: UIView {
                 outgoing.font = UIFont.systemFont(ofSize: 16, weight: .bold)
                 return outgoing
             }
+            config.cornerStyle = .fixed
+            config.background.cornerRadius = Theme.Spacing.buttonRadius
             button.configuration = config
             button.contentHorizontalAlignment = .leading
-            button.layer.cornerRadius = 6
             button.accessibilityTraits = .button
             button.heightAnchor.constraint(equalToConstant: 40).isActive = true
             button.addAction(UIAction { [weak self] _ in self?.rowTapped(option) }, for: .touchUpInside)

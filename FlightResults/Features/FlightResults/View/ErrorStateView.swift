@@ -58,7 +58,8 @@ final class ErrorStateView: UIView {
         buttonConfig.title = "Try Again"
         buttonConfig.baseBackgroundColor = Theme.Colors.yellow
         buttonConfig.baseForegroundColor = Theme.Colors.textPrimary
-        buttonConfig.background.cornerRadius = Theme.Spacing.buttonRadius
+        buttonConfig.cornerStyle = .fixed
+        buttonConfig.background.cornerRadius = 8
         buttonConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
             outgoing.font = Theme.Typography.button
