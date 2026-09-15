@@ -65,16 +65,22 @@ final class FlightResultsViewController: UIViewController {
     }
 
     private func makeDataSource() -> UICollectionViewDiffableDataSource<FlightResultsSection, FlightResultsItem> {
-        let registration = UICollectionView.CellRegistration<FlightCardCell, String> { [weak self] cell, _, id in
+        let cardRegistration = UICollectionView.CellRegistration<FlightCardCell, String> { [weak self] cell, _, id in
             guard let self, let card = cardsByID[id] else { return }
             cell.configure(with: card, imageLoader: imageLoader)
+        }
+        let promoRegistration = UICollectionView.CellRegistration<PromoCardCell, String> { [weak self] cell, _, id in
+            guard let promotion = self?.viewModel.promotions.first(where: { $0.id == id }) else { return }
+            cell.configure(with: promotion)
         }
         return UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
             case .flight(let id):
-                return collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: id)
-            case .loadingBanner, .skeleton, .promotion:
-                // Built in plan steps 11–12.
+                return collectionView.dequeueConfiguredReusableCell(using: cardRegistration, for: indexPath, item: id)
+            case .promotion(let id):
+                return collectionView.dequeueConfiguredReusableCell(using: promoRegistration, for: indexPath, item: id)
+            case .loadingBanner, .skeleton:
+                // Built in plan step 12.
                 return UICollectionViewCell()
             }
         }
@@ -132,14 +138,31 @@ final class FlightResultsViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>()
         if case .success(let cards) = state {
             cardsByID = Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0) })
+
+            // Carousel after the 2nd card, or after the last card with fewer
+            // than 2 (D-22).
+            let splitIndex = min(2, cards.count)
+            let topCards = cards[..<splitIndex]
+            let bottomCards = cards[splitIndex...]
+
             snapshot.appendSections([.listTop])
-            snapshot.appendItems(cards.map { .flight(id: $0.id) }, toSection: .listTop)
+            snapshot.appendItems(topCards.map { .flight(id: $0.id) }, toSection: .listTop)
+
+            if !viewModel.promotions.isEmpty {
+                snapshot.appendSections([.promotions])
+                snapshot.appendItems(viewModel.promotions.map { .promotion(id: $0.id) }, toSection: .promotions)
+            }
+
+            if !bottomCards.isEmpty {
+                snapshot.appendSections([.listBottom])
+                snapshot.appendItems(bottomCards.map { .flight(id: $0.id) }, toSection: .listBottom)
+            }
         } else {
             cardsByID = [:]
         }
         dataSource.apply(snapshot, animatingDifferences: true)
 
-        // Skeletons, promo carousel, empty/error views: plan steps 11–13.
+        // Skeletons, empty/error views: plan steps 12–13.
     }
 
     // Temporary stand-in until plan step 14 adds `SortDropdownView`: cycles
@@ -156,8 +179,14 @@ final class FlightResultsViewController: UIViewController {
 extension FlightResultsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        guard case .flight(let id) = dataSource.itemIdentifier(for: indexPath) else { return }
-        viewModel.didSelectFlight(id: id)
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case .flight(let id):
+            viewModel.didSelectFlight(id: id)
+        case .promotion(let id):
+            viewModel.didSelectPromotion(id: id)
+        case .loadingBanner, .skeleton, .none:
+            break
+        }
     }
 }
 
