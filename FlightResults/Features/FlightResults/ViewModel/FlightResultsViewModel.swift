@@ -270,6 +270,9 @@ final class FlightResultsViewModel {
     }
 }
 
+// `@unchecked Sendable`: `set` only runs on the main actor, and `cancel` only
+// from the ViewModel's `deinit`, which can't overlap a `set` because no other
+// reference to the ViewModel exists by then. `Task.cancel()` is thread-safe.
 private final class CancellableTaskBox: @unchecked Sendable {
     private var task: Task<Void, Never>?
 

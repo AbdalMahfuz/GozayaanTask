@@ -28,6 +28,16 @@ What the AI produced, what was wrong with it, and what I changed.
 | 12 | Code (Steps 13) | `EmptyStateView`/`ErrorStateView` positioned the icon at "25% of the collection's height" (05 §3.5) with `NSLayoutConstraint(item: icon, attribute: .top, ..., toItem: self, attribute: .height, multiplier: 0.25, ...)` | Crashed on launch: `NSInvalidArgumentException: Invalid pairing of layout attributes` — Auto Layout only allows relating same-family attributes (size-to-size, position-to-position), never a position (`.top`) to a size (`.height`) directly, no matter the value being numerically sensible | Replaced with a standard invisible spacer view whose own height is `self.height × 0.25` (a valid height-to-height constraint across the two views), then anchored the icon below that spacer | me — ran the `(Empty)` scheme, hit the crash, pasted the stack trace |
 | 13 | Code (Step 12) | `LoadingBannerCell` started the progress fill, and `SkeletonCardCell` built its shimmer mask, from subview sizes read in the **cell's** `layoutSubviews` | Those subviews live in `contentView`, whose own layout pass runs later, so their sizes were still zero: the orange fill never appeared and the mask was empty, so skeletons never shimmered. A still screenshot looked fine, which is why the AI first reported the loading state as correct | Progress bar moved into a frame-based `ProgressBarView` that sizes itself in its own `layoutSubviews`; skeleton mask built once from the spec's fixed block geometry. Verified by measuring the orange width over time and pixel-diffing consecutive screenshots | AI, during Step 15 verification (comparing against the loading design frame) |
 
+## `@unchecked Sendable` uses
+Spec 04 §5 requires each one to be explained in code and listed here. There is no `nonisolated(unsafe)` anywhere.
+
+| Type | Why it's safe |
+|---|---|
+| `FlightOfferMapper` | Holds one `DateFormatter` (not `Sendable`), configured in `init` and never mutated; only read afterwards |
+| `PriceFormatter` | Same, with a `NumberFormatter` |
+| `HeaderDateFormatter`, `ChipDateFormatter` | Same, with a `DateFormatter` |
+| `CancellableTaskBox` (ViewModel) | `set` runs only on the main actor; `cancel` runs only from the ViewModel's `deinit`, which can't overlap a `set`; `Task.cancel()` is thread-safe |
+
 ## Thrown away
 - An early `serpapi_dac_jfk_oneway.json` fixture, hand-written from the SerpApi docs (before the real key arrived) to unblock Step 3–6 work while waiting for the key (the user said not to let the key block progress). Replaced wholesale by the real captured response once the key was available, per D-32/D-11's own reasoning about not trusting docs-from-memory shapes.
 
