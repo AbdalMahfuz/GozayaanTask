@@ -102,7 +102,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | G5 | Header shows route, date, 👤 02, One Way, back chevron and **Edit** (D-19); Edit/back/Filter/chart/Get Points do nothing and don't crash | MT |
 | G6 | Date strip scrolls horizontally; selected chip (search date) is visible & yellow on launch; tapping chips changes nothing | MT |
 | G7 | Header, strip and sort bar stay pinned while the list scrolls | MT |
-| G8 | Carousel scrolls sideways with centred paging, cards peek on both sides | MT |
+| G8 | Carousel scrolls sideways with paging; the first promo's leading edge lines up with the flight cards (16 pt) and the next card peeks on the right | MT |
 | G9a | Promo image is our own `promo_discount` artwork; nothing from the design is in the repo (`git ls-files` shows no PNG copied from the design) | CR |
 | G9 | Tapping a promo card (or Learn more) opens gozayaan.com in Safari View Controller; Done returns to the list at the same scroll position | MT |
 | G10 | Sort dropdown matches `Cheapest (Sorting Drop Down).png`; choosing Fastest reorders cards with move animation, no scroll jump; button title becomes "Fastest"; outside tap dismisses | MT, screenshot `sort.png` |

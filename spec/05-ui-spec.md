@@ -150,7 +150,7 @@ The layout is compositional. List sections are a single column, width = screen �
 **Accessibility**: the cell is a single element; `accessibilityLabel` comes from ViewData; trait `.button`.
 
 ### 3.2 Promo carousel (section `.promotions`)
-- Orthogonal scrolling `.groupPagingCentered`; item size 204×52; inter-item spacing 8; section insets top 16 (15–16 in design), bottom 16 (in addition to normal card spacing).
+- Orthogonal scrolling `.groupPaging` (leading-aligned, **not** centred: the first promo starts flush with the flight cards' leading edge, 16 pt, and the next one peeks on the right); item size 204×52; inter-item spacing 8; section insets top 16 (15–16 in design), bottom 16 (in addition to normal card spacing).
 - **PromoCardCell**: radius 8, 1 pt white border, clipped.
   - Left: image area 64 wide, `navy` background, asset `promo_discount`, `scaleAspectFit`.
   - Right: `promoMint` background, content insets l 12 / r 8 / t 6 / b 6.

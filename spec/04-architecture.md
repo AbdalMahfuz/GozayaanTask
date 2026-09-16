@@ -251,7 +251,7 @@ final class FlightResultsViewController: UIViewController {
   - ⚠ Items carry **ids only**; the VC looks up the current `FlightCardViewData` by id in a dictionary built during `render`. This is Apple's recommended pattern.
   - **Why not put the ViewData in the item?** Diffable identity is the whole `Hashable` value, so any content change would look like delete + insert (no move animation on re-sort). The alternative, overriding `==` to compare ids only, would make `FlightResultsState` equality lie in the ViewModel tests.
   - Content changes for an existing id are applied with `reconfigureItems`.
-- `.promotions` section: `orthogonalScrollingBehavior = .groupPagingCentered`.
+- `.promotions` section: `orthogonalScrollingBehavior = .groupPaging` (leading-aligned with the cards).
 - Empty and error views are the collection view's `backgroundView`, with an empty snapshot.
 - The View calls **only** ViewModel intents. It never touches the Coordinator.
 

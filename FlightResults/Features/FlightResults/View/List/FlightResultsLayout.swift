@@ -71,7 +71,9 @@ enum FlightResultsLayout {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPagingCentered
+        // Leading-aligned paging, not centred: the first promo starts flush
+        // with the flight cards' leading edge (spec 05 §3.2).
+        section.orthogonalScrollingBehavior = .groupPaging
         section.interGroupSpacing = 8
         section.contentInsets = NSDirectionalEdgeInsets(
             top: Theme.Spacing.screenInset, leading: Theme.Spacing.screenInset,
