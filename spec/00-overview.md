@@ -23,7 +23,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 ## 3. Scope
 
 ### In scope (required)
-1. **Route header**: origin → destination, date, passenger count, "One Way", back chevron (decorative). No Edit button: the design has none (D-19).
+1. **Route header**: origin → destination, date, passenger count, "One Way", back chevron and Edit button (both decorative, D-19).
 2. **Date & price strip**: hard-coded dummy chips (`Sun 08 Feb` / `BDT 70,129`). The selected chip is highlighted. It scrolls horizontally, and taps are ignored.
 3. **Loading skeletons**: shimmer cards, a progress bar and a "Hang tight!" message.
 4. **Flight cards**: airline, departure and arrival times (with a +N day marker), duration, stops (Non-Stop / 1 Stop / 2 Stop), both airport codes, and the starting price.
@@ -36,7 +36,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 9. **Unit tests**: mapping (including a 3-leg result → "2 Stop"), ViewModel state transitions, sorting, formatters, and the network error mapping. The network layer is stubbed.
 
 ### Out of scope
-- The Edit button and flow (D-19), the Filter screen, the price-trend (chart) button, "Get Points", and the back navigation. All are **visible but do nothing**.
+- The edit flow behind the Edit button (D-19), the Filter screen, the price-trend (chart) button, "Get Points", and the back navigation. All are **visible but do nothing**.
 - Tapping a date chip.
 - Flight details or booking. `departure_token` and `booking_token` are ignored. Tapping a flight card is still sent to the Coordinator through the delegate the brief requires, and the Coordinator only logs it (see D-18).
 - Round trips, multi-city, and multiple passenger types.

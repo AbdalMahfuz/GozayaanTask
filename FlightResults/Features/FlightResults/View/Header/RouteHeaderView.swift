@@ -1,8 +1,9 @@
 import UIKit
 
-/// Spec 05 §2.1. Decorative back chevron; no Edit button (D-19).
+/// Spec 05 §2.1. Back chevron and Edit button are both decorative (D-19).
 final class RouteHeaderView: UIView {
     private let backButton = UIButton(type: .system)
+    private let editButton = UIButton(type: .system)
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
 
@@ -33,6 +34,21 @@ final class RouteHeaderView: UIView {
         backButton.accessibilityTraits = .button
         // Decorative: no target added — tapping does nothing (D-19).
 
+        // The brief asks for an Edit button and allows it to be decorative;
+        // the design frame has none, so it follows the header's own styling.
+        var editConfig = UIButton.Configuration.plain()
+        editConfig.title = "Edit"
+        editConfig.baseForegroundColor = Theme.Colors.onNavy
+        editConfig.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        editConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = Theme.Typography.sortFilter
+            return outgoing
+        }
+        editButton.configuration = editConfig
+        editButton.accessibilityLabel = "Edit search"
+        // Decorative too: there is no edit flow to open (D-19).
+
         titleLabel.font = Theme.Typography.headerTitle
         titleLabel.textColor = Theme.Colors.onNavy
         titleLabel.textAlignment = .center
@@ -43,7 +59,7 @@ final class RouteHeaderView: UIView {
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 1
 
-        [backButton, titleLabel, subtitleLabel].forEach {
+        [backButton, editButton, titleLabel, subtitleLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
@@ -54,10 +70,14 @@ final class RouteHeaderView: UIView {
             backButton.widthAnchor.constraint(equalToConstant: 44),
             backButton.heightAnchor.constraint(equalToConstant: 44),
 
+            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            editButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            editButton.heightAnchor.constraint(equalToConstant: 44),
+
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: backButton.trailingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: editButton.leadingAnchor, constant: -8),
 
             subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),

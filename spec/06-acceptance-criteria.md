@@ -99,7 +99,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | G2 | **Success** looks like `…One Way.png`: card layout, fonts, colours, dashed separator, `+1Day` superscript placement, carousel after card 2 | MT (scheme *Fixture*), screenshot `success.png` |
 | G3 | **Empty** state shows icon/title/message, no carousel, sort disabled | MT (scheme *Empty*), `empty.png` |
 | G4 | **Error** state shows icon/title/message/Try Again; Try Again shows loading again | MT (scheme *Error*), `error.png` |
-| G5 | Header shows route, date, 👤 02, One Way, back chevron, and **no** Edit button; back/Filter/chart/Get Points do nothing and don't crash | MT |
+| G5 | Header shows route, date, 👤 02, One Way, back chevron and **Edit** (D-19); Edit/back/Filter/chart/Get Points do nothing and don't crash | MT |
 | G6 | Date strip scrolls horizontally; selected chip (search date) is visible & yellow on launch; tapping chips changes nothing | MT |
 | G7 | Header, strip and sort bar stay pinned while the list scrolls | MT |
 | G8 | Carousel scrolls sideways with centred paging, cards peek on both sides | MT |

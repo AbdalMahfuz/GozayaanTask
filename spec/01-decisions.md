@@ -119,10 +119,12 @@ Header: `15 Oct, 2026` (`dd MMM, yyyy`). Chips: `Sun 08 Feb` (`EEE dd MMM`). Mon
   - The whole card is a large, easy touch target and a single VoiceOver element (`.button`).
   - When a details screen is added, only the Coordinator changes; the View and ViewModel stay the same.
 
-### D-19 — No "Edit" button; the header follows the design ✔ Reviewed
-- The brief mentions an Edit button ("Edit can be decorative"), but the design has none. Decision: **follow the design and leave it out**.
-- The back chevron is kept, as a decorative element (this is the root screen, so there is nothing to go back to).
-- Be ready to explain on the call: the brief itself calls Edit optional and decorative, there's no edit flow, and "UI correctness" is judged against the design.
+### D-19 — Decorative "Edit" button in the header ✔ Reviewed (reversed 2026-09-17)
+- The brief lists it as part of the route header: "origin → destination, the date, passenger count, 'One Way', and an **Edit** button. Edit can be decorative; there's no edit flow to build."
+- The design frame has no Edit button. **Earlier decision was to follow the design and leave it out; reversed — the brief's list of required header elements wins over the frame's omission.**
+- Built as decorative, like the back chevron, Filter, the chart button and "Get Points": visible, labelled for VoiceOver, no target attached.
+- Placement is our own, since the frame doesn't show one: trailing side of the header, vertically aligned with the back chevron, white, in the sort/filter type style. The title stays centred on the screen and is constrained not to overlap it.
+- Be ready to explain on the call: the brief names it explicitly, so it ships; it's decorative because the brief says there's no edit flow.
 
 ### D-20 — Header, date strip and sort/filter bar stay pinned; only the results scroll
 The route context and the sort control stay reachable while the user scrolls a long list. The long design frame is a static render and doesn't show scroll behaviour.

@@ -78,7 +78,7 @@ The whole screen background is `navy`, including behind the status bar. Status b
 - Back chevron: SF Symbol `chevron.left`, 20 pt regular, white, leading 16. Hit area 44×44. **Decorative**: tapping does nothing.
 - Title: centred on the screen (not between the buttons), 1 line, shrinks to a minimum scale of 0.8.
 - Subtitle, centred 4 pt below the title: `{date}` ` | ` 👤`{pax}` ` | ` `{One Way}`. The person icon is SF Symbol `person`, 12 pt, white, with 2 pt before the number.
-- No Edit button (D-19). The trailing side is empty, as in the design.
+- Edit button (D-19): trailing 16, vertically centred on the back chevron, hit area 44 pt tall, title `Edit` in white, `sortFilter` type style. **Decorative**: tapping does nothing. The design frame has none, so its placement is ours; the title is constrained to stay 8 pt clear of it.
 - Top: 12 pt below the safe area. Bottom: 16 pt to the strip.
 
 ### 2.2 DateFareStripView
