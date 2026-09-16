@@ -13,10 +13,10 @@ final class ProgressBarView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = Theme.Colors.cardBackground
-        layer.cornerRadius = 4
+        layer.cornerRadius = Theme.Spacing.progressBarRadius
         clipsToBounds = true
         fillView.backgroundColor = Theme.Colors.progressOrange
-        fillView.layer.cornerRadius = 4
+        fillView.layer.cornerRadius = Theme.Spacing.progressBarRadius
         addSubview(fillView)
     }
 

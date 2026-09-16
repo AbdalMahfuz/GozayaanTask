@@ -39,7 +39,7 @@ final class SortFilterBarView: UIView {
     private func setUp() {
         let fontTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = Theme.Typography.button
+            outgoing.font = Theme.Typography.sortFilter
             return outgoing
         }
 
@@ -47,15 +47,15 @@ final class SortFilterBarView: UIView {
         sortConfig.title = "Cheapest"
         sortConfig.image = UIImage(systemName: "chevron.down")
         sortConfig.imagePlacement = .trailing
-        sortConfig.imagePadding = 8
+        sortConfig.imagePadding = 4
         sortConfig.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
         sortConfig.baseForegroundColor = Theme.Colors.onNavy
-        sortConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+        sortConfig.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         // Stay white when disabled: the spec's disabled look is the whole
         // button at 50 % alpha, not UIKit's grey disabled tint on top of it.
         sortConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = Theme.Typography.button
+            outgoing.font = Theme.Typography.sortFilter
             outgoing.foregroundColor = Theme.Colors.onNavy
             return outgoing
         }
@@ -73,10 +73,11 @@ final class SortFilterBarView: UIView {
         filterConfig.title = "Filter"
         filterConfig.image = UIImage(systemName: "slider.horizontal.3")
         filterConfig.imagePlacement = .trailing
-        filterConfig.imagePadding = 8
+        filterConfig.imagePadding = 4
         filterConfig.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 14)
         filterConfig.baseForegroundColor = Theme.Colors.textPrimary
         filterConfig.baseBackgroundColor = Theme.Colors.yellow
+        filterConfig.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
         filterConfig.titleTextAttributesTransformer = fontTransformer
         filterConfig.cornerStyle = .fixed
         filterConfig.background.cornerRadius = Theme.Spacing.buttonRadius
@@ -92,6 +93,7 @@ final class SortFilterBarView: UIView {
         NSLayoutConstraint.activate([
             sortButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             sortButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            sortButton.widthAnchor.constraint(equalToConstant: 100),
             sortButton.heightAnchor.constraint(equalToConstant: 32),
 
             filterButton.trailingAnchor.constraint(equalTo: trailingAnchor),

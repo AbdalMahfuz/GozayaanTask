@@ -4,7 +4,7 @@ import UIKit
 /// dictionary rebuilt on each `render`, so re-sorting animates as moves
 /// instead of delete+insert.
 enum FlightResultsSection: Hashable {
-    case loadingBanner, listTop, promotions, listBottom
+    case loadingBanner, skeletonTop, listTop, promotions, skeletonBottom, listBottom
 }
 
 enum FlightResultsItem: Hashable {
@@ -23,21 +23,35 @@ enum FlightResultsLayout {
                 return bannerSection()
             case .promotions:
                 return promotionsSection()
+            case .skeletonTop, .skeletonBottom:
+                return listSection(
+                    estimatedHeight: 116,
+                    interGroupSpacing: Theme.Spacing.skeletonSpacing
+                )
             case .listTop, .listBottom, .none:
-                return listSection()
+                return listSection(
+                    estimatedHeight: 180,
+                    interGroupSpacing: Theme.Spacing.cardSpacing
+                )
             }
         }
     }
 
-    private static func listSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(180))
+    private static func listSection(
+        estimatedHeight: CGFloat,
+        interGroupSpacing: CGFloat
+    ) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(estimatedHeight)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = NSDirectionalEdgeInsets(
             top: 0, leading: Theme.Spacing.screenInset, bottom: 0, trailing: Theme.Spacing.screenInset
         )
-        section.interGroupSpacing = Theme.Spacing.cardSpacing
+        section.interGroupSpacing = interGroupSpacing
         return section
     }
 

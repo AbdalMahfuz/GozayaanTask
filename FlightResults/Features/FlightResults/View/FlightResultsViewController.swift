@@ -112,7 +112,9 @@ final class FlightResultsViewController: UIViewController {
             dateFareStripView.topAnchor.constraint(equalTo: routeHeaderView.bottomAnchor),
             dateFareStripView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             dateFareStripView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dateFareStripView.heightAnchor.constraint(equalToConstant: 65),
+            dateFareStripView.heightAnchor.constraint(
+                equalToConstant: Theme.Spacing.chipHeight + 1
+            ),
 
             sortFilterBarView.topAnchor.constraint(equalTo: dateFareStripView.bottomAnchor, constant: 16),
             sortFilterBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -158,6 +160,8 @@ final class FlightResultsViewController: UIViewController {
             snapshot.appendItems([.loadingBanner], toSection: .loadingBanner)
             appendCarouselSplit(
                 items: (0..<3).map { FlightResultsItem.skeleton($0) },
+                topSection: .skeletonTop,
+                bottomSection: .skeletonBottom,
                 to: &snapshot
             )
         case .success(let cards):
@@ -166,7 +170,12 @@ final class FlightResultsViewController: UIViewController {
             wasShowingSuccess = true
             // Carousel after the 2nd card, or after the last card with fewer
             // than 2 (D-22).
-            appendCarouselSplit(items: cards.map { .flight(id: $0.id) }, to: &snapshot)
+            appendCarouselSplit(
+                items: cards.map { .flight(id: $0.id) },
+                topSection: .listTop,
+                bottomSection: .listBottom,
+                to: &snapshot
+            )
         case .empty(let data):
             cardsByID = [:]
             wasShowingSuccess = false
@@ -189,14 +198,16 @@ final class FlightResultsViewController: UIViewController {
     /// 3 skeletons, spec 02 §2 table).
     private func appendCarouselSplit(
         items: [FlightResultsItem],
+        topSection: FlightResultsSection,
+        bottomSection: FlightResultsSection,
         to snapshot: inout NSDiffableDataSourceSnapshot<FlightResultsSection, FlightResultsItem>
     ) {
         let splitIndex = min(2, items.count)
         let topItems = items[..<splitIndex]
         let bottomItems = items[splitIndex...]
 
-        snapshot.appendSections([.listTop])
-        snapshot.appendItems(Array(topItems), toSection: .listTop)
+        snapshot.appendSections([topSection])
+        snapshot.appendItems(Array(topItems), toSection: topSection)
 
         if !viewModel.promotions.isEmpty {
             snapshot.appendSections([.promotions])
@@ -204,8 +215,8 @@ final class FlightResultsViewController: UIViewController {
         }
 
         if !bottomItems.isEmpty {
-            snapshot.appendSections([.listBottom])
-            snapshot.appendItems(Array(bottomItems), toSection: .listBottom)
+            snapshot.appendSections([bottomSection])
+            snapshot.appendItems(Array(bottomItems), toSection: bottomSection)
         }
     }
 

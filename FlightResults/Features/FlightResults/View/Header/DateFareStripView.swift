@@ -16,7 +16,7 @@ final class DateFareStripView: UIView {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
-        layout.itemSize = CGSize(width: 100, height: 64)
+        layout.itemSize = CGSize(width: Theme.Spacing.chipWidth, height: Theme.Spacing.chipHeight)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(frame: frame)
         setUp()
@@ -66,7 +66,7 @@ final class DateFareStripView: UIView {
             collectionView.topAnchor.constraint(equalTo: topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: chartButton.leadingAnchor, constant: -8),
-            collectionView.heightAnchor.constraint(equalToConstant: 64),
+            collectionView.heightAnchor.constraint(equalToConstant: Theme.Spacing.chipHeight),
 
             chartButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             chartButton.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),

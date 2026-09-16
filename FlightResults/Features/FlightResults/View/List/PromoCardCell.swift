@@ -73,7 +73,7 @@ final class PromoCardCell: UICollectionViewCell {
 
         let learnMoreStack = UIStackView(arrangedSubviews: [learnMoreLabel, arrowImageView])
         learnMoreStack.axis = .horizontal
-        learnMoreStack.spacing = 4
+        learnMoreStack.spacing = 2
         learnMoreStack.alignment = .center
 
         [imageAreaView, contentAreaView].forEach {

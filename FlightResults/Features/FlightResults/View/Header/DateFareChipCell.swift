@@ -1,6 +1,6 @@
 import UIKit
 
-/// Spec 05 §2.2. Width 100 / height 64, set by the collection view's layout.
+/// Spec 05 §2.2. Width / height from Figma fare chips; set by the collection view's layout.
 final class DateFareChipCell: UICollectionViewCell {
     static let reuseIdentifier = "DateFareChipCell"
 
@@ -52,8 +52,8 @@ final class DateFareChipCell: UICollectionViewCell {
         priceLabel.font = Theme.Typography.chipPrice
         priceLabel.textAlignment = .center
 
-        shimmerBar.backgroundColor = Theme.Colors.onNavy.withAlphaComponent(0.3)
-        shimmerBar.layer.cornerRadius = 6
+        shimmerBar.backgroundColor = Theme.Colors.brandBlue
+        shimmerBar.layer.cornerRadius = 4
         shimmerBar.clipsToBounds = true
         shimmerBar.isHidden = true
 
@@ -66,21 +66,21 @@ final class DateFareChipCell: UICollectionViewCell {
         }
 
         NSLayoutConstraint.activate([
-            dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             dateLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
 
-            priceLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 6),
+            priceLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 4),
             priceLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
 
-            shimmerBar.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
+            shimmerBar.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 8),
             shimmerBar.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            shimmerBar.widthAnchor.constraint(equalToConstant: 70),
+            shimmerBar.widthAnchor.constraint(equalToConstant: 80),
             shimmerBar.heightAnchor.constraint(equalToConstant: 12),
 
             selectionIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             selectionIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             selectionIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            selectionIndicator.heightAnchor.constraint(equalToConstant: 3)
+            selectionIndicator.heightAnchor.constraint(equalToConstant: Theme.Spacing.chipIndicatorHeight)
         ])
     }
 }
