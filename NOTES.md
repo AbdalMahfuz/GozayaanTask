@@ -16,6 +16,19 @@ Then clean the build folder (⇧⌘K) and run again. Free keys are available at 
 - **Don't set it in the Build Settings tab.** Xcode would write the key into `project.pbxproj`, where it overrides the xcconfig and gets committed.
 - **No key?** Run the `FlightResults (Fixture)` scheme. It uses a real captured SerpApi response bundled with the app, so it needs no key.
 
+### Schemes
+Pick a scheme from Xcode's scheme menu. Only `FlightResults` needs a key; the other four show every state of the screen without one.
+
+| Scheme | What it does | Needs key |
+|---|---|---|
+| `FlightResults` | Live SerpApi search (DAC → JFK, one way, 2 adults, 30 days from today). Debug builds cache the response on disk for 6 h, so repeated runs don't use up the free 100-search quota | Yes |
+| `FlightResults (Fixture)` | Success state from a real captured SerpApi response bundled in the app, shown after a 1.5 s delay so the loading state is visible first | No |
+| `FlightResults (Loading)` | Stays in the loading state (skeleton cards, shimmer, progress bar) | No |
+| `FlightResults (Empty)` | Empty state ("No flights found") after 1 s of loading | No |
+| `FlightResults (Error)` | Error state (offline) after 1 s of loading. Try Again works: it reloads, and ends in the same error again because this scheme always fails | No |
+
+Each extra scheme only adds a launch argument (`-FRDataSource fixture` or `-FRForceState loading/empty/error`). `AppEnvironment` is the only place that reads them, and it does so only in `DEBUG` builds, so a Release build always makes the live call.
+
 ## AI tool
 - **Claude Code** (CLI). Spec and data layer were built with Claude Sonnet 5; I switched to Claude Opus 5 partway through the UI steps and for the verification pass.
 
