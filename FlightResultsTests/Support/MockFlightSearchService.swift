@@ -15,6 +15,7 @@ final class MockFlightSearchService: FlightSearchService, @unchecked Sendable {
     private var mode: Mode
     private var pendingContinuation: CheckedContinuation<[FlightOffer], Error>?
     private var _callCount = 0
+    private var _wasCancelled = false
 
     init(mode: Mode = .result(.success([]))) {
         self.mode = mode
@@ -22,6 +23,11 @@ final class MockFlightSearchService: FlightSearchService, @unchecked Sendable {
 
     var callCount: Int {
         withLock { _callCount }
+    }
+
+    /// True once a suspended search was cancelled by its task.
+    var wasCancelled: Bool {
+        withLock { _wasCancelled }
     }
 
     func setMode(_ mode: Mode) {
@@ -38,8 +44,28 @@ final class MockFlightSearchService: FlightSearchService, @unchecked Sendable {
         case .result(let result):
             return try result.get()
         case .suspending:
-            return try await withCheckedThrowingContinuation { continuation in
-                withLock { pendingContinuation = continuation }
+            // Cancellation-aware, like `URLSession`: a cancelled task resumes
+            // with `CancellationError` instead of hanging forever. Handles a
+            // cancel that lands before the continuation is stored, too.
+            return try await withTaskCancellationHandler {
+                try await withCheckedThrowingContinuation { continuation in
+                    let alreadyCancelled = withLock { () -> Bool in
+                        if _wasCancelled { return true }
+                        pendingContinuation = continuation
+                        return false
+                    }
+                    if alreadyCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+            } onCancel: {
+                let continuation = withLock { () -> CheckedContinuation<[FlightOffer], Error>? in
+                    _wasCancelled = true
+                    let value = pendingContinuation
+                    pendingContinuation = nil
+                    return value
+                }
+                continuation?.resume(throwing: CancellationError())
             }
         }
     }

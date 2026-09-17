@@ -54,9 +54,13 @@ final class FlightResultsViewModel {
     // MARK: - Intents
 
     func start() {
+        guard let pending = beginLoad() else { return }
+        // The task holds only the service and request while it waits — never
+        // `self`. Holding `self` across the `await` would keep the ViewModel
+        // alive until the request finished, so `deinit` could never cancel it.
         let task = Task { [weak self] in
-            guard let self else { return }
-            await self.load()
+            let outcome = await Self.search(pending)
+            self?.finishLoad(outcome, generation: pending.generation)
         }
         taskBox.set(task)
     }
@@ -65,28 +69,49 @@ final class FlightResultsViewModel {
         start()
     }
 
+    /// Same flow as `start()`, awaited by the caller. Used by tests.
     func load() async {
-        guard !isLoading else { return }
+        guard let pending = beginLoad() else { return }
+        let outcome = await Self.search(pending)
+        finishLoad(outcome, generation: pending.generation)
+    }
+
+    private struct PendingLoad: Sendable {
+        let generation: Int
+        let service: FlightSearchService
+        let request: FlightSearchRequest
+    }
+
+    private func beginLoad() -> PendingLoad? {
+        guard !isLoading else { return nil }
         isLoading = true
-        defer { isLoading = false }
-
         generation += 1
-        let myGeneration = generation
         state = .loading
+        return PendingLoad(generation: generation, service: service, request: request)
+    }
 
+    private nonisolated static func search(_ pending: PendingLoad) async -> Result<[FlightOffer], Error> {
         do {
-            let result = try await service.searchFlights(request)
-            guard myGeneration == generation, !Task.isCancelled else { return }
+            return .success(try await pending.service.searchFlights(pending.request))
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    private func finishLoad(_ outcome: Result<[FlightOffer], Error>, generation loadGeneration: Int) {
+        isLoading = false
+        guard loadGeneration == generation, !Task.isCancelled else { return }
+
+        switch outcome {
+        case .success(let result):
             offers = result
             if result.isEmpty {
                 state = .empty(Self.makeEmptyData(request: request, formatters: formatters))
             } else {
                 state = .success(makeCards(FlightOfferSorter.sort(result, by: sortOption)))
             }
-        } catch is CancellationError {
-            return
-        } catch {
-            guard myGeneration == generation else { return }
+        case .failure(let error):
+            guard !(error is CancellationError) else { return }
             let flightError = (error as? FlightSearchError) ?? .unknown
             state = .error(Self.makeErrorData(flightError))
         }

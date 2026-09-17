@@ -77,25 +77,35 @@ final class RetainCycleTests: XCTestCase {
     }
 
     /// Leaving the screen mid-search must not keep it alive through the
-    /// in-flight `Task`.
+    /// in-flight `Task`, and must cancel the request.
     func test_screen_deallocates_whileSearchIsStillInFlight() async {
         weak var weakViewModel: FlightResultsViewModel?
         weak var weakViewController: FlightResultsViewController?
         let service = MockFlightSearchService(mode: .suspending)
 
-        do {
-            let viewModel = makeViewModel(service: service)
-            let viewController = FlightResultsViewController(viewModel: viewModel, imageLoader: StubImageLoader())
-            viewController.view.layoutIfNeeded() // viewDidLoad starts the search
+        var viewModel: FlightResultsViewModel? = makeViewModel(service: service)
+        var viewController: FlightResultsViewController? = FlightResultsViewController(
+            viewModel: viewModel!, imageLoader: StubImageLoader()
+        )
+        viewController?.view.layoutIfNeeded() // viewDidLoad starts the search
 
-            weakViewModel = viewModel
-            weakViewController = viewController
+        // The search task starts on a later main-actor turn. Releasing before
+        // it has called the service would test nothing (NOTES #18).
+        for _ in 0..<500 where service.callCount == 0 {
+            await Task.yield()
         }
+        XCTAssertEqual(service.callCount, 1, "precondition: the search must actually be in flight")
+
+        weakViewModel = viewModel
+        weakViewController = viewController
+        viewController = nil
+        viewModel = nil
 
         await drainReleases()
 
         XCTAssertNil(weakViewController, "ViewController leaked while a search was in flight")
         XCTAssertNil(weakViewModel, "ViewModel leaked while a search was in flight")
+        XCTAssertTrue(service.wasCancelled, "Leaving the screen didn't cancel the in-flight search")
     }
 }
 

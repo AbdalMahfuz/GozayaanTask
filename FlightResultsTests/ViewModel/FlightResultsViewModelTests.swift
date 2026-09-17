@@ -313,6 +313,24 @@ final class FlightResultsViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.coordinatorDelegate)
     }
 
+    /// Releasing the ViewModel mid-search must deallocate it and cancel the
+    /// request. Fails if the in-flight task holds `self` across the `await`.
+    func test_releasingViewModel_cancelsInFlightSearch() async {
+        let service = MockFlightSearchService(mode: .suspending)
+        var viewModel: FlightResultsViewModel? = makeViewModel(service: service)
+        weak let weakViewModel = viewModel
+
+        viewModel?.start()
+        await waitUntil { service.callCount == 1 }
+        XCTAssertEqual(service.callCount, 1, "precondition: the search must actually be in flight")
+
+        viewModel = nil
+        await waitUntil { service.wasCancelled }
+
+        XCTAssertNil(weakViewModel, "ViewModel stayed alive while its search was in flight")
+        XCTAssertTrue(service.wasCancelled, "Releasing the ViewModel didn't cancel the search")
+    }
+
     func test_viewModel_isReleased_whenNoExternalReferences() {
         var viewModel: FlightResultsViewModel? = makeViewModel(service: MockFlightSearchService())
         weak let weakViewModel = viewModel

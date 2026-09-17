@@ -181,24 +181,27 @@ final class FlightResultsViewModel {
 }
 ```
 
-`load()` outline, which reviewers must be able to trace:
+Load outline, which reviewers must be able to trace. It's split into a synchronous begin and finish, so the waiting in between holds **only the service and request, never the ViewModel**:
 ```
-guard !isLoading else { return }
-isLoading = true; defer { isLoading = false }
-generation += 1; let myGen = generation
-setState(.loading)
-do {
-    let result = try await service.searchFlights(request)
-    guard myGen == generation, !Task.isCancelled else { return }
-    offers = result
-    setState(result.isEmpty ? .empty(emptyData) : .success(makeCards(sorter.sort(result, by: sortOption))))
-} catch is CancellationError { return }
-  catch {
-    guard myGen == generation else { return }
-    setState(.error(makeErrorData(FlightSearchError(error))))
-}
+start():
+    guard let pending = beginLoad() else { return }     // re-entry guard, generation += 1, state = .loading
+    task = Task { [weak self] in
+        let outcome = await search(pending)              // no reference to self while waiting
+        self?.finishLoad(outcome, generation: pending.generation)
+    }
+
+finishLoad(outcome, generation):
+    isLoading = false
+    guard generation == current, !Task.isCancelled else { return }
+    .success(result) → offers = result; .empty or .success(sorted cards)
+    .failure(CancellationError) → no state change
+    .failure(error) → .error(makeErrorData(FlightSearchError(error)))
 ```
-`deinit` cancels `loadTask`. Swift 6: `deinit` isn't main-actor-isolated, so it can't read main-actor state. The task handle is therefore kept where `deinit` is allowed to cancel it (for example a `nonisolated let` box that owns the handle); how exactly is checked when the build step compiles warning-free.
+`load()` runs the same three steps awaited in place, for tests.
+
+`deinit` cancels the task. Swift 6: `deinit` isn't main-actor-isolated, so the task handle lives in a `nonisolated let` box that `deinit` can reach.
+
+**Why the split matters:** the first version was `Task { [weak self] in guard let self else { return }; await self.load() }`. `guard let self` makes a strong reference that lasts across the `await`, so the task kept the ViewModel alive until the request finished — and `deinit`, the thing meant to cancel it, could never run first. Leaving the screen mid-search didn't cancel anything (NOTES #18). Covered by `test_releasingViewModel_cancelsInFlightSearch`.
 
 ### 3.3 The delegate protocol
 In `FlightResultsCoordinatorDelegate.swift`, importing **Foundation only**, so the ViewModel can refer to it without seeing UIKit:

@@ -65,7 +65,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | D6 | State is `.loading` *while* the service is suspended | UT `test_stateIsLoading_whileRequestInFlight` (continuation-controlled mock) |
 | D7 | `retry()` from error → `[.error, .loading, .success]` and service called twice | UT `test_retry_fromError_reloads` |
 | D8 | Calling `load()` twice while loading → service called once | UT `test_concurrentLoad_isIgnored` |
-| D9 | Cancellation → no state change after cancel | UT `test_cancellation_doesNotEmitError` |
+| D9 | Cancellation → no state change after cancel; releasing the ViewModel mid-search deallocates it and cancels the request | UT `test_cancellation_doesNotEmitError`, `test_releasingViewModel_cancelsInFlightSearch` (mutation-checked against the old `guard let self` task) |
 | D10 | Card ViewData formatting: `"4h 40m"`, `"Non-Stop"`, `"+1Day"`, `"37,400"`, `"BDT"`, times `"04:00"` | UT `test_cardViewData_formatting` |
 | D11 | Header ViewData: `"Dhaka - New York"`, `"14 Oct, 2026"` (for injected date), `"02"`, `"One Way"` | UT `test_headerViewData` |
 | D12 | Date fares: 7 items, index 3 selected, text `"Wed 14 Oct"` / `"BDT 68,500"` | UT `test_dateFares` |
