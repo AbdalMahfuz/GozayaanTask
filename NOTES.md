@@ -1,6 +1,5 @@
 # NOTES
 
-Filled in step by step while building (see `spec/07-implementation-plan.md`), not written from memory at the end.
 
 ## Before you run it: SerpApi key
 The key is **not committed**, so a fresh clone running the `FlightResults` scheme shows the "Search unavailable" error state instead of results. To see live results, add your own key:
