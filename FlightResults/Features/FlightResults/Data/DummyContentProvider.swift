@@ -25,7 +25,7 @@ struct DummyContentProvider: Sendable {
     private static func makeDateFares(around searchDate: Date) -> [DateFare] {
         let prices = [70129, 74240, 120400, 68500, 81990, 95300, 77410]
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
+        calendar.timeZone = .gmt
         return prices.enumerated().map { index, price in
             let dayOffset = index - 3
             let date = calendar.date(byAdding: .day, value: dayOffset, to: searchDate) ?? searchDate

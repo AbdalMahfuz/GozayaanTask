@@ -21,7 +21,7 @@ struct FlightOfferMapper: @unchecked Sendable {
 
     private var utcCalendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
+        calendar.timeZone = .gmt
         return calendar
     }
 
@@ -59,25 +59,15 @@ struct FlightOfferMapper: @unchecked Sendable {
         guard let totalDuration = resolvedDuration(for: group) else { return nil }
 
         let calendar = utcCalendar
-        let departureComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: departureDate)
-        let arrivalComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: arrivalDate)
+        let departureLocal = Self.localDateTime(from: departureDate, in: calendar)
+        let arrivalLocal = Self.localDateTime(from: arrivalDate, in: calendar)
 
-        let departureLocal = LocalDateTime(
-            year: departureComponents.year!, month: departureComponents.month!, day: departureComponents.day!,
-            hour: departureComponents.hour!, minute: departureComponents.minute!
-        )
-        let arrivalLocal = LocalDateTime(
-            year: arrivalComponents.year!, month: arrivalComponents.month!, day: arrivalComponents.day!,
-            hour: arrivalComponents.hour!, minute: arrivalComponents.minute!
-        )
-
-        let departureDay = calendar.date(
-            from: DateComponents(year: departureLocal.year, month: departureLocal.month, day: departureLocal.day)
-        )!
-        let arrivalDay = calendar.date(
-            from: DateComponents(year: arrivalLocal.year, month: arrivalLocal.month, day: arrivalLocal.day)
-        )!
-        let dayOffset = calendar.dateComponents([.day], from: departureDay, to: arrivalDay).day ?? 0
+        // Calendar days between the two local dates, not `hours / 24`.
+        let dayOffset = calendar.dateComponents(
+            [.day],
+            from: calendar.startOfDay(for: departureDate),
+            to: calendar.startOfDay(for: arrivalDate)
+        ).day ?? 0
 
         var airlineNames: [String] = []
         for leg in group.flights {
@@ -108,6 +98,17 @@ struct FlightOfferMapper: @unchecked Sendable {
             layoverAirportCodes: layoverCodes,
             price: price,
             currencyCode: currencyCode
+        )
+    }
+
+    /// `component(_:from:)` is non-optional, unlike `dateComponents`'s fields.
+    private static func localDateTime(from date: Date, in calendar: Calendar) -> LocalDateTime {
+        LocalDateTime(
+            year: calendar.component(.year, from: date),
+            month: calendar.component(.month, from: date),
+            day: calendar.component(.day, from: date),
+            hour: calendar.component(.hour, from: date),
+            minute: calendar.component(.minute, from: date)
         )
     }
 

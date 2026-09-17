@@ -15,7 +15,7 @@ final class SerpApiRequestBuilderTests: XCTestCase {
 
     func test_buildsExpectedQueryItems() throws {
         let builder = SerpApiRequestBuilder(apiKey: "secret-key")
-        let urlRequest = builder.buildURLRequest(for: request)
+        let urlRequest = try builder.buildURLRequest(for: request)
         let url = try XCTUnwrap(urlRequest.url)
         let items = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems)
 
@@ -44,7 +44,7 @@ final class SerpApiRequestBuilderTests: XCTestCase {
         var dates: Set<String> = []
         for identifier in ["Pacific/Kiritimati", "Pacific/Pago_Pago"] {
             NSTimeZone.default = try XCTUnwrap(TimeZone(identifier: identifier))
-            let url = try XCTUnwrap(builder.buildURLRequest(for: request).url)
+            let url = try XCTUnwrap(try builder.buildURLRequest(for: request).url)
             let items = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems)
             dates.insert(try XCTUnwrap(items.first { $0.name == "outbound_date" }?.value))
         }

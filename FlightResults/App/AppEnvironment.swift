@@ -47,7 +47,7 @@ struct AppEnvironment {
 
     private static func defaultOutboundDate(from now: Date) -> Date {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
+        calendar.timeZone = .gmt
         return calendar.date(byAdding: .day, value: 30, to: now) ?? now
     }
 

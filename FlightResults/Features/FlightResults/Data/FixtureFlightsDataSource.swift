@@ -26,9 +26,5 @@ struct FixtureFlightsDataSource: FlightsDataSource {
 extension FixtureFlightsDataSource {
     /// The outbound date baked into `serpapi_dac_jfk_oneway.json`, so fixture
     /// mode's header stays consistent with the data actually shown (D-04).
-    static var fixtureOutboundDate: Date {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
-        return calendar.date(from: DateComponents(year: 2026, month: 10, day: 14))!
-    }
+    static let fixtureOutboundDate = Date(timeIntervalSince1970: 1_791_936_000) // 2026-10-14T00:00:00Z
 }

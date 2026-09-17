@@ -21,7 +21,7 @@ struct RemoteFlightsDataSource: FlightsDataSource {
         guard let apiKey, !apiKey.isEmpty else {
             throw FlightSearchError.missingAPIKey
         }
-        let urlRequest = requestBuilder.buildURLRequest(for: request)
+        let urlRequest = try requestBuilder.buildURLRequest(for: request)
         if let url = urlRequest.url {
             Log.debug(.network, "GET \(Log.redact(url: url))")
         }

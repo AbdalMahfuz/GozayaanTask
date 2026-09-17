@@ -22,13 +22,21 @@ struct SerpApiRequestBuilder: Sendable {
         self.apiKey = apiKey
     }
 
-    func buildURLRequest(for request: FlightSearchRequest) -> URLRequest {
-        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
+    /// Throws `FlightSearchError.unknown` rather than trapping if the URL
+    /// can't be assembled (it can't with the fixed base URL, but a crash is
+    /// never the right failure for a network call).
+    func buildURLRequest(for request: FlightSearchRequest) throws -> URLRequest {
+        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+            throw FlightSearchError.unknown
+        }
         var items = cacheableQueryItems(for: request)
         items.append(URLQueryItem(name: "api_key", value: apiKey ?? ""))
         components.queryItems = items
+        guard let url = components.url else {
+            throw FlightSearchError.unknown
+        }
 
-        var urlRequest = URLRequest(url: components.url!)
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         urlRequest.timeoutInterval = 30
         urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
@@ -54,8 +62,12 @@ struct SerpApiRequestBuilder: Sendable {
     /// needed for this, so the builder stays trivially `Sendable`).
     private func formattedDate(_ date: Date) -> String {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
-        return String(format: "%04d-%02d-%02d", components.year!, components.month!, components.day!)
+        calendar.timeZone = .gmt
+        return String(
+            format: "%04d-%02d-%02d",
+            calendar.component(.year, from: date),
+            calendar.component(.month, from: date),
+            calendar.component(.day, from: date)
+        )
     }
 }
