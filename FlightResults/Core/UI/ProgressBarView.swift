@@ -13,10 +13,8 @@ final class ProgressBarView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = Theme.Colors.cardBackground
-        layer.cornerRadius = Theme.Spacing.progressBarRadius
         clipsToBounds = true
         fillView.backgroundColor = Theme.Colors.progressOrange
-        fillView.layer.cornerRadius = Theme.Spacing.progressBarRadius
         addSubview(fillView)
     }
 
@@ -41,6 +39,10 @@ final class ProgressBarView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Pill ends: exactly half the height. A radius larger than that isn't
+        // clamped by Core Animation and draws flattened, square-looking ends.
+        layer.cornerRadius = bounds.height / 2
+        fillView.layer.cornerRadius = bounds.height / 2
         guard bounds.width > 0, !hasStarted, window != nil else {
             fillView.frame = fillFrame()
             return

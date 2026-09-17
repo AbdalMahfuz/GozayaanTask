@@ -62,7 +62,6 @@ enum Theme {
         static let chipIndicatorHeight: CGFloat = 3
         static let promoRadius: CGFloat = 8
         static let dropdownRadius: CGFloat = 12
-        static let progressBarRadius: CGFloat = 18
     }
 }
 

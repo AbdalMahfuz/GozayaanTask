@@ -57,7 +57,7 @@ Sizes read off the Figma file (the earlier table was measured from the PNG expor
 | `stateMessage` | 15 regular | Empty/error message |
 
 ### 1.3 Spacing & radii
-`screenInset = 16`, `cardPadding = 16`, `cardSpacing = 12`, `skeletonSpacing = 8`, `cardRadius = 12`, `skeletonRadius = 16`, `buttonRadius = 6`, `chipWidth = 112`, `chipHeight = 56`, `chipIndicatorHeight = 3`, `promoRadius = 8`, `dropdownRadius = 12`, `progressBarRadius = 18` (taller than the 8 pt bar, so it renders as a pill).
+`screenInset = 16`, `cardPadding = 16`, `cardSpacing = 12`, `skeletonSpacing = 8`, `cardRadius = 12`, `skeletonRadius = 16`, `buttonRadius = 6`, `chipWidth = 112`, `chipHeight = 56`, `chipIndicatorHeight = 3`, `promoRadius = 8`, `dropdownRadius = 12`. The progress bar has no radius token: its corner radius is always half its height, so it renders as a pill.
 
 ## 2. Screen layout (top → bottom)
 
@@ -163,7 +163,7 @@ The layout is compositional. List sections are a single column, width = screen �
 - The whole cell is tappable and calls `viewModel.didSelectPromotion(id:)`. Accessibility label: `"{title}. Learn more, opens gozayaan.com"`, trait `.link`.
 
 ### 3.3 LoadingBannerCell (loading only, first item)
-- Progress bar (`ProgressBarView`): full content width, height 8, `progressBarRadius` (so both ends are round), track white, fill `progressOrange`. Fill animation from §2.1 of `02`. Frame-based, sized in its own `layoutSubviews` — see NOTES #13 for why a parent cell's layout pass is too early.
+- Progress bar (`ProgressBarView`): full content width, height 8, corner radius = height / 2 (so both ends are round; a larger radius draws square-looking ends), track white, fill `progressOrange`. Fill animation from §2.1 of `02`. Frame-based, sized in its own `layoutSubviews` — see NOTES #13 for why a parent cell's layout pass is too early.
 - 24 pt below: `Hang tight! We’re finding the best flight options for you.`, `loadingTitle`, white, centred, up to 3 lines. 36 pt bottom spacing before the first skeleton.
 
 ### 3.4 SkeletonCardCell (loading only; 3 items, carousel after #2)
