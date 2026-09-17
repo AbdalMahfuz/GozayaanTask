@@ -58,7 +58,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 | Swift | 6.x, **Swift 6 language mode** (strict concurrency) |
 | Minimum iOS | 18.0 (D-01) |
 | Device | iPhone, portrait only |
-| UI | UIKit, all in code (no storyboards except LaunchScreen) |
+| UI | UIKit, all in code, no storyboards (the launch screen is `UILaunchScreen` in `Info.plist`) |
 | Dependencies | **None** (no SPM or CocoaPods packages) |
 | Tests | XCTest (`FlightResultsTests` target, no host-app UI) |
 | AI tool | Claude Code |

@@ -25,6 +25,8 @@
 	<dict>
 		<key>UIColorName</key>
 		<string>LaunchBackground</string>
+		<key>UIImageName</key>
+		<string>app_logo</string>
 	</dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

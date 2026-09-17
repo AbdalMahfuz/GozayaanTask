@@ -66,7 +66,7 @@ SceneDelegate → AppCoordinator → FlightResultsCoordinator
 - **Views** render already-formatted strings; no formatting, sorting or networking happens in a cell.
 - **Coordinator** owns navigation, and is the only place that touches `SFSafariViewController` (Learn more → gozayaan.com, the one real navigation in the task).
 - **Composition root** (`AppEnvironment`) is the only place that reads launch arguments and picks implementations.
-- **Splash** (`SplashViewController`, D-36): the launch screen paints the navy background and the controller animates from it — logo, then "GoZayaan" letter by letter — before `AppCoordinator` cross-dissolves to the results screen. It has no ViewModel, because it has no state; the Coordinator drives it through a closure.
+- **Splash** (`SplashViewController`, D-36): the launch screen paints the navy background with the logo centred, and the controller animates from that same frame — the logo moves up, then "GoZayaan" letter by letter — before `AppCoordinator` cross-dissolves to the results screen. It has no ViewModel, because it has no state; the Coordinator drives it through a closure.
 
 Full detail lives in [`/spec`](spec), written before any code: states, data mapping, architecture, UI measurements, acceptance criteria and the step-by-step build plan. [`NOTES.md`](NOTES.md) records the AI tooling, every correction made along the way, and which decisions were mine.
 

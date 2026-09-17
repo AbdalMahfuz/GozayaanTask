@@ -197,10 +197,11 @@ Price, duration, time, day offset and stop label formatting live in plain format
 
 ### D-36 — Animated splash before the results screen
 - Not in the brief or the design; added on request, with the app icon supplied in `design/appIcon.png`.
-- An iOS launch screen can't animate, so it's two pieces: the **launch screen** paints `LaunchBackground` (the same navy), and `SplashViewController` continues from it with the animation, so the hand-off is invisible.
-- The animation: logo springs in (0.8 → 1, fade), the letters of "GoZayaan" fade and rise in sequence (55 ms apart), then "Find your flight" fades in. Total ≈ 1.5 s, then the Coordinator cross-dissolves to the results screen.
+- An iOS launch screen can't animate, so it's two pieces: the **launch screen** (`UILaunchScreen` in `Info.plist`, no storyboard) paints `LaunchBackground` (the same navy) with `app_logo` centred at 96 pt, and `SplashViewController` starts from that exact frame, so the hand-off is invisible.
+- `app_logo`'s rounded corners are baked into the PNGs with transparency, because the launch screen can't clip an image. The splash uses the same image unclipped, so both frames match pixel for pixel.
+- The animation: the logo, already visible, springs up 60 pt from the centre to make room for the wordmark; the letters of "GoZayaan" fade and rise in sequence (55 ms apart), then "Find your flight" fades in. Total ≈ 1.5 s, then the Coordinator cross-dissolves to the results screen.
 - **No ViewModel**: there's no state or data here, only a timed animation, so the splash is a plain `UIViewController` with an `onFinished` closure that `AppCoordinator` owns — navigation stays in the Coordinator layer.
-- Reduce Motion shows the finished frame with no movement, holds briefly, and swaps without the cross-dissolve.
+- Reduce Motion jumps straight to the finished frame with no movement, holds briefly, and swaps without the cross-dissolve.
 - VoiceOver treats the screen as a single element labelled "GoZayaan Flights"; the per-letter labels are decorative.
 - Splash type (`splashTitle` 28 bold, `splashSubtitle` 14 medium) is ours, since the Figma file has no splash frame.
 - The search still starts when the results screen appears, so the splash adds ~1.5 s before the request. Worth revisiting if the call felt slow — the search could start during the splash.

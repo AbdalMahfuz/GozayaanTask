@@ -1,8 +1,9 @@
 import UIKit
 
 /// Animated splash shown before the results screen (D-36). iOS launch screens
-/// are static, so the launch screen paints the same navy background and this
-/// controller continues from it — the hand-off is invisible.
+/// are static, so the launch screen paints the same navy background and
+/// `app_logo` at the screen's centre, and this controller starts from that
+/// exact frame — the hand-off is invisible.
 ///
 /// No ViewModel: there is no state or data here, only a timed animation, so
 /// the Coordinator drives it through `onFinished`.
@@ -10,6 +11,9 @@ final class SplashViewController: UIViewController {
     private let logoImageView = UIImageView(image: UIImage(named: "app_logo"))
     private let titleStackView = UIStackView()
     private let subtitleLabel = UILabel()
+    /// Starts at 0 to match the launch screen's centred logo; the intro moves
+    /// the logo up to make room for the wordmark.
+    private var logoCenterYConstraint: NSLayoutConstraint?
 
     /// Called once the intro finishes, so the Coordinator can swap in the
     /// results screen.
@@ -36,11 +40,9 @@ final class SplashViewController: UIViewController {
     }
 
     private func setUpLayout() {
+        // Corners are baked into `app_logo` (the launch screen can't round
+        // them), so no layer clipping here; that keeps both frames identical.
         logoImageView.contentMode = .scaleAspectFit
-        logoImageView.layer.cornerRadius = 22
-        logoImageView.layer.cornerCurve = .continuous
-        logoImageView.clipsToBounds = true
-        logoImageView.alpha = 0
 
         titleStackView.axis = .horizontal
         titleStackView.alignment = .center
@@ -65,9 +67,12 @@ final class SplashViewController: UIViewController {
             view.addSubview($0)
         }
 
+        let logoCenterY = logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        logoCenterYConstraint = logoCenterY
+
         NSLayoutConstraint.activate([
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -60),
+            logoCenterY,
             logoImageView.widthAnchor.constraint(equalToConstant: 96),
             logoImageView.heightAnchor.constraint(equalToConstant: 96),
 
@@ -86,16 +91,16 @@ final class SplashViewController: UIViewController {
 
         guard !UIAccessibility.isReduceMotionEnabled else {
             // Reduce Motion: show the finished frame, hold briefly, move on.
-            [logoImageView, subtitleLabel].forEach { $0.alpha = 1 }
+            logoCenterYConstraint?.constant = Self.logoRestingOffset
+            subtitleLabel.alpha = 1
             letters.forEach { $0.alpha = 1 }
             finish(after: 0.8)
             return
         }
 
-        logoImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        logoCenterYConstraint?.constant = Self.logoRestingOffset
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.4) {
-            self.logoImageView.alpha = 1
-            self.logoImageView.transform = .identity
+            self.view.layoutIfNeeded()
         }
 
         for (index, letter) in letters.enumerated() {
@@ -113,6 +118,9 @@ final class SplashViewController: UIViewController {
 
         finish(after: lettersEnd + 0.7)
     }
+
+    /// Where the logo settles above the wordmark.
+    private static let logoRestingOffset: CGFloat = -60
 
     private func finish(after delay: TimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in

@@ -114,7 +114,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | G16 | Live run with real key: success list appears with real SerpApi data; second launch within 6 h makes no network call (verify in console log `cache hit`) | MT |
 | G17 | Run without `Secrets.xcconfig`: app builds, shows "Search unavailable" error (not a crash, not fake data) | MT |
 | G18 | Works on smallest supported width (375 pt, e.g. iPhone SE 3rd gen — create sim if needed) and a large one (iPhone Air, 420 pt) without clipping | MT |
-| G19 | Splash (D-36): launch screen's navy continues into `SplashViewController` with no flash; logo springs in, "GoZayaan" animates letter by letter, subtitle follows; hands off to the results screen by cross-dissolve after ≈1.5 s | MT, screenshot `splash.png` |
+| G19 | Splash (D-36): launch screen (navy + centred logo) continues into `SplashViewController` with no flash or jump; logo springs up from the centre, "GoZayaan" animates letter by letter, subtitle follows; hands off to the results screen by cross-dissolve after ≈1.5 s | MT, screenshot `splash.png` |
 | G20 | App icon from `design/appIcon.png` is compiled into the bundle (`CFBundleIconName = AppIcon`) and shows on the home screen, with no white border | CR + MT |
 
 ## H. Deliverables

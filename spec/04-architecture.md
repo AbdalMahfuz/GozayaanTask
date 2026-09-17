@@ -98,9 +98,8 @@ FlightResults/
 │       ├── List/FlightResultsLayout.swift   compositional layout
 │       └── States/EmptyStateView.swift, ErrorStateView.swift
 ├── Resources/
-│   ├── Assets.xcassets                      AppIcon, promo_discount (own artwork), coin icon, airline placeholder
-│   ├── Fixtures/serpapi_dac_jfk_oneway.json
-│   └── LaunchScreen.storyboard
+│   ├── Assets.xcassets                      AppIcon, app_logo (splash + launch screen), LaunchBackground, promo_discount (own artwork), coin icon, airline placeholder
+│   └── Fixtures/serpapi_dac_jfk_oneway.json
 └── Info.plist
 Config/
 ├── Base.xcconfig                            #include? "Secrets.xcconfig"
