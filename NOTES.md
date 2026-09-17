@@ -46,3 +46,17 @@ Spec 04 §5 requires each one to be explained in code and listed here. There is 
 ## Decisions that were mine
 - Reviewed and confirmed or changed: D-01, D-03, D-05, D-18, D-19, D-27, D-30, D-32 (see `spec/01-decisions.md`).
 - Repo layout, commit identity, and no AI attribution lines in commits (AI use is disclosed here instead).
+
+## Walkthrough talking points (Edit + BDT)
+
+### Edit button (D-19)
+**One-liner:** The brief names Edit in the route header and says it can be decorative, so it ships as a trailing header control with no target — same pattern as back, Filter, and the chart button. The design frame omits it; I followed the brief’s explicit list over the frame.
+
+**If they push on design vs brief:** First I dropped Edit to match the PNG (corrections log #1). On re-read, the brief’s required header elements won, so I reversed that (corrections log #14). That sequence is intentional judgment, not an oversight.
+
+### BDT / USD (D-06)
+**One-liner:** The UI stays in BDT for GoZayaan’s market; SerpApi rejects `currency=BDT` (HTTP 400, and BDT isn’t on their Google Travel currency list), so the wire request is fixed to USD and prices are converted with a documented fixed rate (`× 122`) in the service layer before the ViewModel.
+
+**If they ask “why not just show USD?”:** That would match the API, but it would break the design’s BDT labelling. I rejected the AI’s “switch everything to USD” fix and kept display currency separate from wire currency.
+
+**Known limitation to volunteer:** The rate is a snapshot, not live FX. Production would proxy through a GoZayaan backend or a real FX feed.
