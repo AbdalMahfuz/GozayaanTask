@@ -16,7 +16,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | A4 | View files don't refer to any Coordinator type or `FlightSearchService` | CR: grep |
 | A5 | Only `FlightResultsCoordinator` creates `SFSafariViewController` | CR: grep |
 | A6 | `FlightResultsViewModelTests` compiles and runs with no UIKit import and no Coordinator; delegate replaced by `SpyCoordinatorDelegate` | UT (the target itself) |
-| A7 | No retain cycle: closing/replacing the screen deallocates VC and VM | UT `test_viewModel_isReleased_whenNoExternalReferences` (weak-ref check) + MT Memory Graph shows no cycle |
+| A7 | No retain cycle: closing/replacing the screen deallocates VC and VM | UT `RetainCycleTests` — the real graph (VC + VM + delegate, cells rendered, and again with a search in flight) must fully deallocate; proven able to fail by temporarily making the `onStateChange` capture strong. Plus `leaks <pid>` against the running app in the success, error and loading states: 0 leaks |
 | A8 | Launch arguments and `#if DEBUG` data-source switching appear only in `AppEnvironment` | CR: grep `FRDataSource\|FRForceState` |
 | A9 | Builds under Swift 6 language mode with 0 warnings | CR: `xcodebuild … build` output |
 | A10 | Running the unit tests never starts the app's coordinators or a network request (unit-test guard, `04 §4`) | CR + MT: breakpoint/log in `AppCoordinator.start` is not hit during `xcodebuild test` |
