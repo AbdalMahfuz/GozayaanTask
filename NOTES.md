@@ -3,7 +3,7 @@
 Filled in step by step while building (see `spec/07-implementation-plan.md`), not written from memory at the end.
 
 ## AI tool
-- **Claude Code** (CLI), model Claude Opus 5.
+- **Claude Code** (CLI). Spec and data layer were built with Claude Sonnet 5; I switched to Claude Opus 5 partway through the UI steps and for the verification pass.
 
 ## How I directed the AI
 - **Option A:** the spec in `/spec` came first. The AI drafted it from the brief and the design PNGs; I reviewed it and changed the decisions listed below before any code was written.
@@ -29,6 +29,7 @@ What the AI produced, what was wrong with it, and what I changed.
 | 13 | Code (Step 12) | `LoadingBannerCell` started the progress fill, and `SkeletonCardCell` built its shimmer mask, from subview sizes read in the **cell's** `layoutSubviews` | Those subviews live in `contentView`, whose own layout pass runs later, so their sizes were still zero: the orange fill never appeared and the mask was empty, so skeletons never shimmered. A still screenshot looked fine, which is why the AI first reported the loading state as correct | Progress bar moved into a frame-based `ProgressBarView` that sizes itself in its own `layoutSubviews`; skeleton mask built once from the spec's fixed block geometry. Verified by measuring the orange width over time and pixel-diffing consecutive screenshots | AI, during Step 15 verification (comparing against the loading design frame) |
 | 14 | Spec + code (Step 15) | The header had no Edit button, per my own earlier call in #1 | The brief lists Edit as part of the route header ("origin → destination, the date, passenger count, 'One Way', and an **Edit** button"), so leaving it out drops a stated requirement; the design frame simply omits it | Decorative Edit button added to `RouteHeaderView`, trailing side, no target — like the back chevron, Filter and chart button. D-19 rewritten as a reversal, with `00`, `05 §2.1` and G5 updated | me — I reversed my own earlier decision after re-reading the brief |
 | 15 | Code + spec (Step 15) | Promo carousel used `.groupPagingCentered`, so the first promo sat centred with dead space to its left while the flight cards started at 16 pt | The carousel looked detached from the list it sits inside; the design's own frames are inconsistent here (the loading frame clips the row at 16 pt, the success frame runs it full-bleed) | Switched to `.groupPaging` so the first promo's leading edge lines up with the cards; spec `04`, `05 §3.2` and G8 updated | me |
+| 16 | Spec + code (Step 15) | Spec 05 §1.2's type scale, which the AI claimed to have "measured from the PNGs" | Measuring glyph heights in the design export showed the whole scale was 15–30 % too large (header 22 vs 20, chip price 17 vs 14, sort/filter 16 vs 12, card price 20 vs 16). It made fares in the date strip collide and forced the promo title onto one truncated line | I took the real values from the Figma file and reset the Theme tokens; spec 05 §1.1–1.3, §2.2, §2.3 and §3.3 updated to match the code | me — I compared the running app against the Figma frames |
 
 ## `@unchecked Sendable` uses
 Spec 04 §5 requires each one to be explained in code and listed here. There is no `nonisolated(unsafe)` anywhere.

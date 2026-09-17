@@ -27,18 +27,21 @@ The frames are 750 px wide, i.e. an iPhone 375 pt canvas at @2x. All sizes below
 | `selectionTint` | `#ECF3FE` | Selected dropdown row |
 | `sortBorder` | `#BCC9DC` | Sort button border |
 | `chartBorderLoading` | `#A5ABB2` | Chart button border while loading |
-| `skeletonStart` → `skeletonEnd` | `#0D2184` → `#1C4AA0` | Skeleton card horizontal gradient (left → right) |
+| `skeletonStart` → `skeletonEnd` | `#01026E` → `#1D4DA2` | Skeleton card horizontal gradient (left → right) |
 | `onNavy` | `#FFFFFF` | Header text, unselected chips, sort text, state texts |
 | `onNavySecondary` | `#FFFFFF` @ 80 % | Empty/error message |
 
 ### 1.2 Typography (SF Pro, D-27)
+Sizes read off the Figma file (the earlier table was measured from the PNG exports and ran 15–30 % large; corrected in NOTES #16).
+
 | Token | Size / weight | Used for |
 |---|---|---|
-| `headerTitle` | 22 bold | "Dhaka - New York" |
-| `headerSubtitle` | 15 regular | "15 Feb, 2025 \| 👤 02 \| One Way" |
-| `chipDate` | 15 regular | "Sun 08 Feb" |
-| `chipPrice` | 17 medium | "BDT 70,129" |
-| `button` | 16 semibold | Cheapest, Filter, Try Again |
+| `headerTitle` | 20 bold | "Dhaka - New York" |
+| `headerSubtitle` | 12 medium | "15 Feb, 2025 \| 👤 02 \| One Way" |
+| `chipDate` | 12 regular | "Sun 08 Feb" |
+| `chipPrice` | 14 medium | "BDT 70,129" |
+| `sortFilter` | 12 bold | Cheapest, Filter, Edit |
+| `button` | 16 semibold | Try Again |
 | `loadingTitle` | 20 semibold, line height 30, centred | "Hang tight! …" |
 | `airline` | 16 regular | Airline name |
 | `points` | 14 regular | "Get Points" |
@@ -48,13 +51,13 @@ The frames are 750 px wide, i.e. an iPhone 375 pt canvas at @2x. All sizes below
 | `dayOffset` | 11 medium | "+1Day" |
 | `currency` | 13 regular | "BDT" on the card |
 | `price` | 20 bold | "37,400" |
-| `promoTitle` | 13 medium, 2 lines | Promo title |
-| `promoLink` | 11 regular, underlined | "Learn more" |
+| `promoTitle` | 10 semibold, 2 lines | Promo title |
+| `promoLink` | 8 medium, underlined | "Learn more" |
 | `stateTitle` | 20 semibold | Empty/error title |
 | `stateMessage` | 15 regular | Empty/error message |
 
 ### 1.3 Spacing & radii
-`screenInset = 16`, `cardPadding = 16`, `cardSpacing = 12`, `cardRadius = 12`, `skeletonRadius = 16`, `buttonRadius = 6`, `chipIndicatorHeight = 3`, `promoRadius = 8`, `dropdownRadius = 12`.
+`screenInset = 16`, `cardPadding = 16`, `cardSpacing = 12`, `skeletonSpacing = 8`, `cardRadius = 12`, `skeletonRadius = 16`, `buttonRadius = 6`, `chipWidth = 112`, `chipHeight = 56`, `chipIndicatorHeight = 3`, `promoRadius = 8`, `dropdownRadius = 12`, `progressBarRadius = 18` (taller than the 8 pt bar, so it renders as a pill).
 
 ## 2. Screen layout (top → bottom)
 
@@ -64,7 +67,7 @@ The whole screen background is `navy`, including behind the status bar. Status b
 ┌ safe area top ───────────────────────────────┐
 │ [‹]      Dhaka - New York                    │  RouteHeaderView      h ≈ 64
 │      14 Oct, 2026 | 👤 02 | One Way          │
-│ Sun 08 Feb  Mon 09 Feb  Tue 10 Feb  … │[📈]│ │  DateFareStripView    h = 64
+│ Sun 08 Feb  Mon 09 Feb  Tue 10 Feb  … │[📈]│ │  DateFareStripView    h = 57
 │ BDT 70,129  BDT 74,240  BDT 120,400   │    │ │
 │ ▔▔▔▔▔▔▔▔▔ (yellow 3pt under selected)        │
 │───────────── 1pt brandBlue divider ──────────│
@@ -83,10 +86,10 @@ The whole screen background is `navy`, including behind the status bar. Status b
 
 ### 2.2 DateFareStripView
 - A horizontal `UICollectionView` (or `UIScrollView` + `UIStackView`) that **scrolls**, with scroll indicators hidden. It spans from the screen's leading edge to 8 pt before the chart button, and content can run under the leading edge (the design shows the first chip cut off).
-- Chip: width 100, height 64. Date label on top (`chipDate`), price below (`chipPrice`), both centred.
+- Chip: width 112, height 56 (`chipWidth`/`chipHeight`). Date label 8 pt from the top (`chipDate`), price 4 pt below it (`chipPrice`), both centred.
   - Unselected: both labels `onNavy`.
   - Selected: both labels `yellow`, plus a 3 pt `yellow` indicator along the chip's bottom edge, full chip width.
-- Loading: price label hidden and replaced by a 70×12 rounded (6) shimmer bar in its place.
+- Loading: price label hidden and replaced by an 80×12 rounded (4) shimmer bar, 8 pt below the date label.
 - Taps are ignored (`isUserInteractionEnabled` stays on for scrolling, but selection doesn't change).
 - On first layout, the selected chip is scrolled to the horizontal centre, without animation.
 - Chart button: 40×40, radius 8, 1 pt border (`yellow` in success/empty/error, `chartBorderLoading` in loading), icon SF Symbol `chart.line.uptrend.xyaxis` 18 pt in the same colour. Trailing 16, vertically centred on the strip. **Decorative**.
@@ -94,8 +97,9 @@ The whole screen background is `navy`, including behind the status bar. Status b
 
 ### 2.3 SortFilterBarView
 - Top 16 below the divider, height 32, insets 16.
-- **Sort button** (leading): background clear, 1 pt `sortBorder`, radius 6, content insets h 12. Title `Cheapest` or `Fastest` (the current option), `button` font, white, then 8 pt, then SF Symbol `chevron.down` 12 pt semibold white. The chevron turns to `chevron.up` while the dropdown is open, with a 0.2 s rotation.
-- **Filter button** (trailing): width 100, `yellow` background, radius 6. `Filter` in `button` font `textPrimary`, 8 pt, then SF Symbol `slider.horizontal.3` 14 pt `textPrimary`. **Decorative**.
+- **Sort button** (leading): width 100, background clear, 1 pt `sortBorder`, radius 6, content insets 8. Title `Cheapest` or `Fastest` (the current option), `sortFilter` font, white, then 4 pt, then SF Symbol `chevron.down` 12 pt semibold white. It stays white when disabled (the disabled look is the whole button at 50 % alpha, not UIKit's grey tint). The chevron turns to `chevron.up` while the dropdown is open, with a 0.2 s rotation.
+- **Filter button** (trailing): width 100, `yellow` background, radius 6. `Filter` in `sortFilter` font `textPrimary`, 4 pt, then SF Symbol `slider.horizontal.3` 14 pt `textPrimary`. **Decorative**.
+- Both buttons set their radius through `UIButton.Configuration.background` with `cornerStyle = .fixed`: iOS 26 draws configuration buttons as capsules and ignores `layer.cornerRadius`.
 - In empty/error states the sort button is disabled at 50 % alpha. Filter stays as it is (decorative anyway).
 
 ### 2.4 SortDropdownView (open state)
@@ -159,7 +163,7 @@ The layout is compositional. List sections are a single column, width = screen �
 - The whole cell is tappable and calls `viewModel.didSelectPromotion(id:)`. Accessibility label: `"{title}. Learn more, opens gozayaan.com"`, trait `.link`.
 
 ### 3.3 LoadingBannerCell (loading only, first item)
-- Progress bar: full content width (343), height 8, radius 4, track white, fill `progressOrange`. Fill animation from §2.1 of `02`.
+- Progress bar (`ProgressBarView`): full content width, height 8, `progressBarRadius` (so both ends are round), track white, fill `progressOrange`. Fill animation from §2.1 of `02`. Frame-based, sized in its own `layoutSubviews` — see NOTES #13 for why a parent cell's layout pass is too early.
 - 24 pt below: `Hang tight! We’re finding the best flight options for you.`, `loadingTitle`, white, centred, up to 3 lines. 36 pt bottom spacing before the first skeleton.
 
 ### 3.4 SkeletonCardCell (loading only; 3 items, carousel after #2)

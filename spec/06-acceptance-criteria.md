@@ -106,7 +106,7 @@ The work is **done** when every row passes, the project builds with **0 warnings
 | G9a | Promo image is our own `promo_discount` artwork; nothing from the design is in the repo (`git ls-files` shows no PNG copied from the design) | CR |
 | G9 | Tapping a promo card (or Learn more) opens gozayaan.com in Safari View Controller; Done returns to the list at the same scroll position | MT |
 | G10 | Sort dropdown matches `Cheapest (Sorting Drop Down).png`; choosing Fastest reorders cards with move animation, no scroll jump; button title becomes "Fastest"; outside tap dismisses | MT, screenshot `sort.png` |
-| G11 | Long airline name (`Air Arabia + US Bangla Airlines`) truncates with `…` and doesn't push "Get Points" | MT (fixture has one) |
+| G11 | Long airline name truncates with `…` and doesn't push "Get Points" | CR: the real fixture's longest is `flydubai + Emirates`, which fits, so this is checked in code — 1 line, `.byTruncatingTail`, compression resistance below the points group |
 | G12 | Airline logos load; fast scrolling never shows a wrong logo in a reused cell | MT |
 | G13 | Shimmer keeps animating after backgrounding + foregrounding the app during loading | MT (scheme *Loading*) |
 | G14 | Reduce Motion ON: no shimmer sweep, no progress animation, app still usable | MT |
