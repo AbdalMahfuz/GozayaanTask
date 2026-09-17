@@ -99,6 +99,7 @@ Each search gets a generation counter. A result from an older generation is drop
 
 ### Empty is not an error
 SerpApi returns **HTTP 200 with `"error": "Google Flights hasn't returned any results for this query."`** when there are no flights. This is mapped to **empty** (an empty offer list), not to an error.
+- ✔ Verified live on 2026-09-17: DAC → JFK dated 350 days out returned HTTP 200, exactly that message, `search_metadata.status = "Success"`, and no flight arrays. (Until then this was assumed from the docs; a 4xx here would have routed empty searches to the error state.)
 - Detection: the `error` string, lowercased, contains `"hasn't returned any results"` or `"no results"`.
 - This string match is brittle, which we accept. It is isolated in one function (`SerpApiErrorClassifier`) and has a unit test with the exact message.
 - Also empty: HTTP 200, no `error`, and both arrays missing or empty.
