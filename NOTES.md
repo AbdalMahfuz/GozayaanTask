@@ -2,6 +2,21 @@
 
 Filled in step by step while building (see `spec/07-implementation-plan.md`), not written from memory at the end.
 
+## Before you run it: SerpApi key
+The key is **not committed**, so a fresh clone running the `FlightResults` scheme shows the "Search unavailable" error state instead of results. To see live results, add your own key:
+
+```bash
+cp Config/Secrets.example.xcconfig Config/Secrets.xcconfig
+# edit Config/Secrets.xcconfig:
+# SERPAPI_API_KEY = your_key_here
+```
+
+Then clean the build folder (⇧⌘K) and run again. Free keys are available at serpapi.com/manage-api-key.
+
+- **Where it's read from:** `Secrets.xcconfig` (git-ignored) → included by `Config/Base.xcconfig` (the app target's base configuration) → `Config/Info.plist` as `$(SERPAPI_API_KEY)` → `AppConfig`. Xcode shows the value under Build Settings → *User-Defined*, but it comes from the xcconfig file. It is not stored in `project.pbxproj`.
+- **Don't set it in the Build Settings tab.** Xcode would write the key into `project.pbxproj`, where it overrides the xcconfig and gets committed.
+- **No key?** Run the `FlightResults (Fixture)` scheme. It uses a real captured SerpApi response bundled with the app, so it needs no key.
+
 ## AI tool
 - **Claude Code** (CLI). Spec and data layer were built with Claude Sonnet 5; I switched to Claude Opus 5 partway through the UI steps and for the verification pass.
 
