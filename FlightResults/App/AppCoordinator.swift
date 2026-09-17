@@ -13,6 +13,15 @@ final class AppCoordinator: Coordinator {
     }
 
     func start() {
+        let splash = SplashViewController()
+        splash.onFinished = { [weak self] in
+            self?.showFlightResults()
+        }
+        window.rootViewController = splash
+        window.makeKeyAndVisible()
+    }
+
+    private func showFlightResults() {
         let navigationController = UINavigationController()
         navigationController.setNavigationBarHidden(true, animated: false)
 
@@ -23,7 +32,14 @@ final class AppCoordinator: Coordinator {
         childCoordinators.append(flightResults)
         flightResults.start()
 
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+        // Cross-dissolve so the splash doesn't cut abruptly; Reduce Motion
+        // gets the plain swap.
+        guard !UIAccessibility.isReduceMotionEnabled else {
+            window.rootViewController = navigationController
+            return
+        }
+        UIView.transition(with: window, duration: 0.3, options: [.transitionCrossDissolve]) {
+            self.window.rootViewController = navigationController
+        }
     }
 }

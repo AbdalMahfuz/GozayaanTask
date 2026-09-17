@@ -195,6 +195,16 @@ Exact hex values in `05-ui-spec.md` came from pixel sampling of `../design/*.png
 ### D-34 — ViewModel formats display strings (ViewData), Views stay dumb
 Price, duration, time, day offset and stop label formatting live in plain formatter structs that the ViewModel uses. Views don't hold any display logic, so formatting is unit-tested without UIKit.
 
+### D-36 — Animated splash before the results screen
+- Not in the brief or the design; added on request, with the app icon supplied in `design/appIcon.png`.
+- An iOS launch screen can't animate, so it's two pieces: the **launch screen** paints `LaunchBackground` (the same navy), and `SplashViewController` continues from it with the animation, so the hand-off is invisible.
+- The animation: logo springs in (0.8 → 1, fade), the letters of "GoZayaan" fade and rise in sequence (55 ms apart), then "Find your flight" fades in. Total ≈ 1.5 s, then the Coordinator cross-dissolves to the results screen.
+- **No ViewModel**: there's no state or data here, only a timed animation, so the splash is a plain `UIViewController` with an `onFinished` closure that `AppCoordinator` owns — navigation stays in the Coordinator layer.
+- Reduce Motion shows the finished frame with no movement, holds briefly, and swaps without the cross-dissolve.
+- VoiceOver treats the screen as a single element labelled "GoZayaan Flights"; the per-letter labels are decorative.
+- Splash type (`splashTitle` 28 bold, `splashSubtitle` 14 medium) is ours, since the Figma file has no splash frame.
+- The search still starts when the results screen appears, so the splash adds ~1.5 s before the request. Worth revisiting if the call felt slow — the search could start during the splash.
+
 ### D-35 — Coordinator delegate has two methods
 ```swift
 @MainActor

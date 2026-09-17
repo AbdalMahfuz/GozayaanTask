@@ -30,6 +30,7 @@ Build one iOS screen, **Flight Results**. It shows one-way flights from the Serp
 5. **Discount carousel**: horizontally scrolling promo cards (image, title, Learn more) placed between flight cards. The data is dummy. **Learn more opens gozayaan.com through the Coordinator**, which is the only real navigation.
 6. **Four states**: loading, success, empty, error, each reachable on demand (see `02`).
 7. **Data**: a live SerpApi request, flattened into our own `FlightOffer`.
+7b. **Splash**: an animated intro (logo + wordmark) shown before the results screen, and the app icon (D-36). Added on request, beyond the brief.
 
 ### In scope (extra credit, committed to)
 8. **Sorting**: the Cheapest / Fastest dropdown works, and the list reorders in place. Sorting happens in the ViewModel as a pure function.

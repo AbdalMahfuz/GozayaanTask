@@ -44,6 +44,9 @@ enum Theme {
         static let promoLink = UIFont.systemFont(ofSize: 8, weight: .medium)
         static let stateTitle = UIFont.systemFont(ofSize: 20, weight: .semibold)
         static let stateMessage = UIFont.systemFont(ofSize: 15, weight: .regular)
+        // Splash only — not in the Figma file, so these are our own (D-36).
+        static let splashTitle = UIFont.systemFont(ofSize: 28, weight: .bold)
+        static let splashSubtitle = UIFont.systemFont(ofSize: 14, weight: .medium)
     }
 
     enum Spacing {
